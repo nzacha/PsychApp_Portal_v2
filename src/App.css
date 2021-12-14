@@ -6,12 +6,12 @@
   height: 40vmin;
   pointer-events: none;
 }
-
+/* 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
-}
+} */
 
 .App-header {
   background-color: #282c34;
@@ -36,3 +36,21 @@
     transform: rotate(360deg);
   }
 }
+
+
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: lightgray;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  /* outline: 2px solid slategrey; */
+  border-radius: 20px;
+}
+/* box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1); */
+  

@@ -1,34 +1,40 @@
+import React, { useState } from "react";
 import { Fade, Paper, TextField, Typography, useTheme } from "@mui/material";
 import { drawerTransitionTime } from "../../navigation";
-import { useGetUserList } from "./store/selectors";
-import React from "react";
-import { SET_USER_LIST } from "./store/types";
-import { defaultAPIAction } from "../../redux/common/actions";
 import { useDispatch } from "react-redux";
-import { IUserData } from "../../models/Users";
-import { ModelNamesEnum } from "../../config/models";
-import { HttpMethod } from "../../config/httpMethods";
 import GridLayout from "../../components/common/GridLayout";
 import AccountIcon from '@mui/icons-material/AccountCircle';
+import { IFormItem, newFormItem } from "../../config/formItem";
+import { defaultAPIAction } from "../../redux/common/actions";
+import { ModelNamesEnum } from "../../config/models";
+import { HttpMethod } from "../../config/httpMethods";
+import { useSelectAuthData } from "../../redux/staticReducers/authReducer/selectors";
 
 const UserEditor = React.memo(() => {
     const dispatch = useDispatch();
     const theme = useTheme();
 
-    const userList = useGetUserList();
-    // React.useEffect(() => {
-    //     defaultAPIAction({
-    //         path: `/${ModelNamesEnum.User}/list/${1}`,
-    //         method: HttpMethod.GET,
-    //     })(dispatch, SET_USER_LIST)    
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // },[dispatch])
+    const user = useSelectAuthData();
 
-    const [users, setUsers] = React.useState<IUserData[]>([]);
-    React.useEffect(()=>{
-        setUsers(userList.data || []);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[userList])
+    const [email, setEmail] = useState<IFormItem<string>>(newFormItem('', false));
+    const [phone, setPhone] = useState<IFormItem<string>>(newFormItem('', false));
+    const [name, setName] = useState<IFormItem<string>>(newFormItem('', false));
+    const [lastName, setLastName] = useState<IFormItem<string>>(newFormItem('', false));
+    
+    React.useEffect(() => {
+        if(user.data)
+            defaultAPIAction({
+                path: `/${ModelNamesEnum.User}/${user.data.user_id}`,
+                method: HttpMethod.GET,
+                onFinish: (success, res) => {
+                    const data = res.data.response;
+                    setEmail(newFormItem(data.email, false));
+                    setPhone(newFormItem(data.phone, false));
+                    setName(newFormItem(data.first_name, false));
+                    setLastName(newFormItem(data.last_name, false));
+                }
+            })(dispatch, '') 
+    }, [dispatch, user]);
 
     
     return (
@@ -43,25 +49,90 @@ const UserEditor = React.memo(() => {
                         {
                             id: 'email',
                             element: (
-                                <TextField label={'Email'} fullWidth/>
+                                <TextField label={'Email'} fullWidth value={email.value} onChange={event => {
+                                    setEmail(newFormItem(event.target.value, true));
+                                }} onBlur={event => {
+                                    if (user.data) {
+                                        defaultAPIAction({
+                                            path: `/${ModelNamesEnum.User}/${user.data.user_id}`,
+                                            method: HttpMethod.PATCH,
+                                            body:{
+                                                
+                                                email: event.target.value
+                                            },
+                                            onFinish: (success, res) => {
+                                                setEmail(newFormItem(event.target.value, false));
+                                            }
+                                        })(dispatch, '') 
+                                    }
+                                }}/>
                             ),
                             xs: 6
                         },{
                             id: 'phone',
                             element: (
-                                <TextField label={'Phone'} fullWidth/>
+                                <TextField label={'Phone'} fullWidth value={phone.value} onChange={event => {
+                                    setPhone(newFormItem(event.target.value, true))
+                                }} onBlur={event => {
+                                    if (user.data) {
+                                        defaultAPIAction({
+                                            path: `/${ModelNamesEnum.User}/${user.data.user_id}`,
+                                            method: HttpMethod.PATCH,
+                                            body:{
+                                                
+                                                phone: event.target.value
+                                            },
+                                            onFinish: (success, res) => {
+                                                setPhone(newFormItem(event.target.value, false));
+                                            }
+                                        })(dispatch, '') 
+                                    }
+                                }}
+                                />
                             ),
                             xs: 6
                         },{
                             id: 'name',
                             element: (
-                                <TextField label={'Name'} fullWidth/>
+                                <TextField label={'Name'} fullWidth value={name.value} onChange={event => {
+                                    setName(newFormItem(event.target.value, true));
+                                }} onBlur={event => {
+                                    if (user.data) {
+                                        defaultAPIAction({
+                                            path: `/${ModelNamesEnum.User}/${user.data.user_id}`,
+                                            method: HttpMethod.PATCH,
+                                            body:{
+                                                
+                                                first_name: event.target.value
+                                            },
+                                            onFinish: (success, res) => {
+                                                setName(newFormItem(event.target.value, false));
+                                            }
+                                        })(dispatch, '') 
+                                    }
+                                }}/>
                             ),
                             xs: 6
                         },{
                             id: 'last_name',
                             element: (
-                                <TextField label={'Last Name'} fullWidth/>
+                                <TextField label={'Last Name'} fullWidth value={lastName.value} onChange={event => {
+                                    setLastName(newFormItem(event.target.value, true))
+                                }} onBlur={event => {
+                                    if (user.data) {
+                                        defaultAPIAction({
+                                            path: `/${ModelNamesEnum.User}/${user.data.user_id}`,
+                                            method: HttpMethod.PATCH,
+                                            body:{
+                                                
+                                                last_name: event.target.value
+                                            },
+                                            onFinish: (success, res) => {
+                                                setLastName(newFormItem(event.target.value, false));
+                                            }
+                                        })(dispatch, '') 
+                                    }
+                                }}/>
                             ),
                             xs: 6
                         }

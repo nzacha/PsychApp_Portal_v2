@@ -22,11 +22,12 @@ import { IFormItem, newFormItem } from '../../config/formItem';
 import { ModelNamesEnum } from '../../config/models';
 import { UPDATE_QUIZ_DETAIL, UPDATE_QUIZ_SECTION } from './store/types';
 import { useDispatch } from 'react-redux';
-import { QuestionColumns, Question } from './Question';
+import { Question } from './Question';
 import { HttpMethod } from '../../config/httpMethods';
 import Title from '../../components/common/Title';
 import EditIcon from '@mui/icons-material/Edit';
 import AnchoredTooltip from '../../components/Tooltip/AnchoredTooltip';
+import { QuestionColumns } from './QuestionColumns';
 
 interface ISectionProps{
   index: number;
@@ -154,8 +155,8 @@ function Section(props: ISectionProps){
                       <QuestionColumns section_id={props.data.section_id} questions={questions} setQuestions={setQuestions}/>
                     </TableHead> 
                     <TableBody>
-                      {questions.map((question, questionIndex)=>(
-                          <Question data={question} questions={questions} setQuestions={setQuestions} key={question.question_id}/>
+                      {questions.map((question, question_index)=>(
+                          <Question index={question_index} data={question} questions={questions} setQuestions={setQuestions} key={question.question_id}/>
                       ))}
                     </TableBody>
                   </Table>

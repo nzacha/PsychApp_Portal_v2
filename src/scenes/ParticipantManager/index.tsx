@@ -11,25 +11,24 @@ import { HttpMethod } from "../../config/httpMethods";
 import { SET_PARTICIPANT_LIST } from "./store/types";
 import { useGetParticipantsList } from "./store/selectors";
 import { IProjectParticipantData } from "../../models/ProjectParticipant";
-import { useGetSelectedProject, useGetSelectedProjectData } from "../MyProjectsPage/store/selectors";
+import { useGetSelectedProjectID} from "../MyProjectsPage/store/selectors";
 
 const UserEditor = React.memo(() => {
     const dispatch = useDispatch();
     const theme = useTheme();
 
-    const selectedProject = useGetSelectedProject();
-    const selectedProjectData = useGetSelectedProjectData(selectedProject || 0);
+    const selectedProject = useGetSelectedProjectID();
 
     const participantList = useGetParticipantsList();
     React.useEffect(() => {
-        if(selectedProject != null && selectedProjectData){
+        if(selectedProject){
             defaultAPIAction({
-                path: `/${ModelNamesEnum.Project_Participant}/list/${selectedProjectData.project_id}`,
+                path: `/${ModelNamesEnum.Project_Participant}/list/${selectedProject}`,
                 method: HttpMethod.GET,
             })(dispatch, SET_PARTICIPANT_LIST)    
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[dispatch, selectedProject, selectedProjectData])
+    },[dispatch, selectedProject])
 
     const [participants, setParticipants] = React.useState<IProjectParticipantData[]>([]);
     React.useEffect(()=>{

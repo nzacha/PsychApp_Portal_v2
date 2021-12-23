@@ -34,14 +34,8 @@ const ProjectManager = React.memo(() => {
             path: `/${ModelNamesEnum.Project_User_Link}`,
             method: HttpMethod.GET,
         })(dispatch, SET_PROJECT_USER_LINKS)    
-
-        console.log('dispatching');
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[dispatch])
-
-    React.useEffect(() => {
-        console.log(projectList);
-    }, [projectList])
 
     // console.log('Rendering Project Manager Page');
     return (

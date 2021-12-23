@@ -10,3 +10,13 @@ export const SET_STACKED_SNACKBAR_DATA: string = typeCreator(
     ReducerKeys.COMMON_REDUCER,
     'SetStackedSnackbarData'
 );
+
+export const SET_SIDEBAR_CONFIG: string = typeCreator(
+    ReducerKeys.COMMON_REDUCER,
+    'SetSideBarConfig'
+);
+
+export const SET_NAVBAR_CONFIG: string = typeCreator(
+    ReducerKeys.COMMON_REDUCER,
+    'SetNavBarConfig'
+);

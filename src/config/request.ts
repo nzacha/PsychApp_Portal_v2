@@ -1,6 +1,7 @@
 import axios, { AxiosResponse, Method } from "axios";
 import { Dispatch } from "react";
 import { getState } from "..";
+import { showSnackBar } from "../components/Snackbar";
 import { defaultAction } from "../redux/common/actions";
 import { ReducerKeys } from "../redux/config";
 import { setToken } from "../redux/staticReducers/authReducer/reducer";
@@ -39,8 +40,9 @@ export function configAxios(dispatch: Dispatch<any>){
             console.error(error)
             if(error.status === 401 || error.status === 403){
                 setToken(null, (res) => {
-                    defaultAction({data: {token: res}})(dispatch, LOG_IN)
+                    defaultAction({data: null})(dispatch, LOG_IN)
                 })
+                showSnackBar({message: 'Session Expired', severity: 'error'})(dispatch)
                 console.error('jwt expired')
             }
         }

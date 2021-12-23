@@ -5,7 +5,7 @@ interface Environment {
 }
 
 const Prodution: Environment = {
-    API_BASE_URL: '',
+    API_BASE_URL: 'http://localhost:5000',
     APP_NAME: 'PsychApp',
     STATIC_FILES_URL: '/static',
 };

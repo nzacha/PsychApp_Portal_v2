@@ -11,17 +11,7 @@ import { LOG_IN } from '../../redux/staticReducers/authReducer/types';
 import { useForm } from 'react-hook-form';
 import { ControlledTextField } from '../../components/common/FormControl/ControlledTextField';
 import { RequiredField } from '../../components/common/FormControl/RequiredField';
-
-const ExpandMore = styled((props: any) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-    transform: !expand ? 'rotate(180deg)' : 'rotate(0deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-        duration: theme.transitions.duration.shortest,
-    }),
-}));
+import Tooltip from '@mui/material/Tooltip';
 
 interface IRegisterForm {
     first_name: string ;
@@ -111,7 +101,9 @@ function RegisterPage(){
                                 id: 'submit',
                                 element: (
                                     <GridContainer md={3} sm={4} xs={5}>
-                                        <Button variant={'contained'} size={'large'} fullWidth 
+                                        <Tooltip title={'currently unavailable'}>
+                                        <span>
+                                        <Button disabled variant={'contained'} size={'large'} fullWidth 
                                             onClick={(event) => {
                                                 handleSubmit((data) => {
                                                     console.log(data);
@@ -120,6 +112,8 @@ function RegisterPage(){
                                                 })();
                                             }} 
                                         >Register</Button>
+                                        </span>
+                                        </Tooltip>
                                     </GridContainer>
                                 ),
                                 xs: 12,
@@ -132,27 +126,6 @@ function RegisterPage(){
                         ]}
                         />
                     </CardContent>
-                    {/* <CardActions disableSpacing>
-                        <IconButton aria-label="add to favorites">
-                            <FavoriteIcon />
-                        </IconButton>
-                        <IconButton aria-label="share">
-                            <ShareIcon />
-                        </IconButton>
-                        <ExpandMore
-                            expand={expanded}
-                            onClick={() => {
-                                setExpanded(!expanded);
-                            }}
-                        >
-                            <ExpandMoreIcon />
-                        </ExpandMore>
-                    </CardActions>
-                    <Collapse in={expanded} timeout="auto" unmountOnExit>
-                        <CardContent>
-                            <Typography paragraph>Method:</Typography>
-                        </CardContent>
-                    </Collapse> */}
                 </Card>
             </GridContainer>
         </Box>

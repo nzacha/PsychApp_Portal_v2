@@ -12,7 +12,7 @@ export enum ActionStatus{
 }
 
 export interface IAction{
-    type: string;
+    type?: string;
     status: ActionStatus;
     data: any;
 }
@@ -28,7 +28,7 @@ interface IDefaultAPIActionProps{
 }
 
 export const defaultAPIAction = ({displayInSnackbar = true, displayInConsole = false, ...props}: IDefaultAPIActionProps) => {
-    return async (dispatch: Dispatch<any>, type: string) => {
+    return async (dispatch: Dispatch<any>, type: string = '') => {
         try{
             dispatch({
                 type: type,

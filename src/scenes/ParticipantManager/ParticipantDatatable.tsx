@@ -17,7 +17,7 @@ import { useDispatch } from 'react-redux';
 import { ModelNamesEnum } from '../../config/models';
 import { HttpMethod } from '../../config/httpMethods';
 import { IProjectParticipantData } from '../../models/ProjectParticipant';
-import { useGetSelectedProject, useGetSelectedProjectData } from "../MyProjectsPage/store/selectors";
+import { useGetSelectedProjectID} from "../MyProjectsPage/store/selectors";
 
 interface IParticipantProps{
   data: IProjectParticipantData;
@@ -62,7 +62,18 @@ function Participant(props: IParticipantProps) {
           />
         </TableCell>
         <TableCell align="center" style={{width: '10%'}}>
-          <IconButton onClick={(event) => {
+          <TextField 
+            label={'Progress'}
+            InputProps={{
+              readOnly: true,
+            }}
+            fullWidth 
+            value={props.data.progress}
+            inputProps={{style: { textAlign: 'center' }}}
+          />    
+        </TableCell>
+        <TableCell align="center" style={{width: '10%'}}>
+          <IconButton disabled onClick={(event) => {
               defaultAPIAction({
                   path: `/${ModelNamesEnum.Project_Participant}/${props.data.participant_id}`,
                   method: HttpMethod.DELETE,
@@ -101,8 +112,7 @@ export function ParticipantsDatatable(props: IParticipantsDatatableProps) {
   // console.log(props.data);
   const dispatch = useDispatch<any>();
   
-  const selectedProject = useGetSelectedProject();
-  const selectedProjectData = useGetSelectedProjectData(selectedProject || 0);
+  const selectedProject = useGetSelectedProjectID();
 
   return (
     <TableContainer component={Paper}>
@@ -112,11 +122,12 @@ export function ParticipantsDatatable(props: IParticipantsDatatableProps) {
             <TableCell align='left'>ID #</TableCell>
             <TableCell align='center'>Name</TableCell>
             <TableCell align='center'>Login Code</TableCell>
+            <TableCell align='center'>Questions Answered</TableCell>
             <TableCell align="center">
               <IconButton onClick={(event) => {
-                  if(selectedProjectData)
+                  if(selectedProject)
                     defaultAPIAction({
-                        path: `/${ModelNamesEnum.Project_Participant}/${selectedProjectData.project_id}`,
+                        path: `/${ModelNamesEnum.Project_Participant}/${selectedProject}`,
                         method: HttpMethod.PUT,
                         onFinish: (success: boolean, result) => {
                             console.log(result)

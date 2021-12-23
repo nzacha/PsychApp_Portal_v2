@@ -5,4 +5,5 @@ export interface IProjectParticipantData extends BaseModel{
     authentication_code: string;
     name: string;
     project_id: number;
+    progress: number;
 }   

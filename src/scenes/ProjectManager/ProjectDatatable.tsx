@@ -49,7 +49,6 @@ const Project = React.memo((props: IProjectProps) => {
             })
             setSelected(newUsers);
         }
-        console.log('use effect 1 ', data.project_id);
     // eslint-disable-next-line        
     }, [userList, projectUserLinks])
     

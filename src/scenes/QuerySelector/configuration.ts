@@ -5,13 +5,13 @@ import { IColumn } from "../../components/common/DataTable";
 // format?: (value: number) => string;
 export const columns: IColumn[]=[
     {
-        id: 'id',
-        label: 'id',
+        id: 'index',
+        label: 'index',
     },{
-        id: 'name',
-        label: 'name',
+        id: 'quiz_question.question',
+        label: 'question',
     },{
-        id: 'col',
-        label: 'col 3',
+        id: 'answer',
+        label: 'answer',
     }
 ]

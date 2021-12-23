@@ -9,6 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { styled } from '@mui/material/styles';
 import { AlignmentOptions } from '../../../config/componentProperties';
+import _ from 'lodash';
 
 export interface IColumn{
   id: string;
@@ -48,22 +49,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function DataTable(props: IDataTableProps) {
     const styles={};
-    // const styles = (theme: Theme) =>{
-    //     createStyles({
-    //         scrollBar: {
-    //             '::-webkit-scrollbar': {
-    //                 width: '10px'
-    //             },
-    //             '::-webkit-scrollbar-track': {
-    //                 '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)'
-    //             },
-    //             '::-webkit-scrollbar-thumb': {
-    //                 backgroundColor: 'rgba(0,0,0,.1)',
-    //                 outline: '1px solid slategrey'
-    //             }
-    //         }
-    //     })
-    // };
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -97,13 +82,13 @@ export default function DataTable(props: IDataTableProps) {
           <TableBody>
             {props.data
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row: any) => {
+              .map((row: any, row_index: number) => {
                 return (
-                  <StyledTableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                  <StyledTableRow hover role="checkbox" tabIndex={-1} key={row_index}>
                     {props.columns.map((column) => {
-                      const value = row[column.id];
+                      const value = _.get(row, column.id);
                       return (
-                        <StyledTableCell key={column.id} align={column.align}>
+                        <StyledTableCell key={`${column.id}_${row_index}`} align={column.align}>
                           {column.format && typeof value === 'number'
                             ? column.format(value)
                             : value}

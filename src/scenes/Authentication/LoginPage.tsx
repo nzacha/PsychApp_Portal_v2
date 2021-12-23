@@ -27,7 +27,7 @@ function LoginPage(){
 	const history = useHistory();
 	React.useEffect(() => {
 		setToken(null, (res) => {
-			defaultAction({data: {token: res}})(dispatch, LOG_IN)
+			defaultAction({data: null})(dispatch, LOG_IN)
 		})
 	}, [dispatch])
 
@@ -69,13 +69,8 @@ function LoginPage(){
 													},
 													onFinish: (success, result ) => {
 														if(success){
-																if(result?.data?.response?.token){
-																	setToken(result.data.response.token, (res) => {
-																		defaultAction({data: {token: res}, onFinish: (success) => {
-																			if(success) history.push('/');
-																		}})(dispatch, LOG_IN)
-																	})
-																}
+															setToken(result?.data?.response?.token);
+															history.push('/');
 														}
 													}
 												})(dispatch, LOG_IN)

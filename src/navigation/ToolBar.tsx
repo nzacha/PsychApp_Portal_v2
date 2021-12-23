@@ -16,11 +16,11 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { drawerTransitionTime } from '.';
-import { Select } from '@mui/material';
+import { Select, Tooltip } from '@mui/material';
 
 import AutoAwesomeMotionIcon from '@mui/icons-material/AutoAwesomeMotion';
 import { playTapSound } from '../config/soundPlayer';
-import { useGetProjectList, useGetSelectedProject } from '../scenes/MyProjectsPage/store/selectors';
+import { useGetProjectList, useGetSelectedProjectID } from '../scenes/MyProjectsPage/store/selectors';
 import { defaultAction } from '../redux/common/actions';
 import { SET_SELECTED_PROJECT } from '../scenes/MyProjectsPage/store/types';
 import { useDispatch } from 'react-redux';
@@ -188,7 +188,7 @@ export default function TopBar(props: IProps) {
 
   const dispatch = useDispatch();
   const projectList = useGetProjectList();
-  const selectedProject = useGetSelectedProject();
+  const selectedProject = useGetSelectedProjectID();
   
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -228,7 +228,7 @@ export default function TopBar(props: IProps) {
               placeholder="Search…"
             />
           </ToolbarItem>
-          {projectList?.data && <ToolbarItem 
+          {selectedProject && projectList?.data && <ToolbarItem 
             sx={{
               marginRight: `2em`, 
               [theme.breakpoints.down('sm')]: {
@@ -242,7 +242,7 @@ export default function TopBar(props: IProps) {
               <AutoAwesomeMotionIcon />
             </SearchIconWrapper>
             <Select
-              value={selectedProject || 0}
+              value={selectedProject}
               // label="Age"
               inputProps={{border: 'none'}}
               sx={{
@@ -265,8 +265,8 @@ export default function TopBar(props: IProps) {
                 projectList?.data?.map((el, index) => (
                   <MenuItem 
                     key={index}
-                    value={index}
-                    onClick={(event) => {defaultAction({data: index})(dispatch, SET_SELECTED_PROJECT)}}
+                    value={el.project_id}
+                    onClick={(event) => {defaultAction({data: el.project_id})(dispatch, SET_SELECTED_PROJECT)}}
                   >{el.name}</MenuItem>
                 ))
               }
@@ -274,8 +274,10 @@ export default function TopBar(props: IProps) {
           </ToolbarItem>
           }
           {/* <Box sx={{ display: { xs: 'none', sm: 'flex' } }} /> */}
+          <Tooltip title={'currently unavailable'}>
+          <span>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+            <IconButton size="large" aria-label="show 4 new mails" color="inherit" disabled>
               <Badge badgeContent={4} color="error">
                 <MailIcon />
               </Badge>
@@ -284,6 +286,7 @@ export default function TopBar(props: IProps) {
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
+              disabled
             >
               <Badge badgeContent={17} color="error">
                 <NotificationsIcon />
@@ -297,12 +300,16 @@ export default function TopBar(props: IProps) {
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
               color="inherit"
+              disabled
             >
               <AccountCircle />
             </IconButton>
           </Box>
+          </span>
+          </Tooltip>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
+              disabled
               size="large"
               aria-label="show more"
               aria-controls={mobileMenuId}

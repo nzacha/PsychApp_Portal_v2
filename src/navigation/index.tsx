@@ -9,23 +9,17 @@ import ToolBar from './ToolBar';
 import { Avatar } from '@mui/material';
 
 import ucyIcon from '../media/static/images/ucy.svg'
+import useWindowDimensions from '../hooks/useWindowDimensions';
+import { useSelectNavBarConfig, useSelectSideBarConfig } from '../redux/staticReducers/commonReducer/selectors';
 
 const drawerWidth = 240;
 export const drawerTransitionTime = 1000;
-export const hideOnClose = false;
-export const movingAppBar = true;
 
-const closed = (theme: Theme): CSSObject => ({
+const closed = (theme: Theme, hideOnClose: boolean): CSSObject => ({
   ...(hideOnClose ? {
     width: '0px',
-    // [theme.breakpoints.up('sm')]: {
-    //   width: '0px'
-    // }
   } : {
     width: `calc(${theme.spacing(7)})`,
-    // [theme.breakpoints.up('sm')]: {
-    //   width: `calc(${theme.spacing(9)} + 1px)`
-    // }
   })
 })
 
@@ -38,13 +32,13 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
+interface IAppBarProps extends MuiAppBarProps {
+  open: boolean;
+  movingAppBar: boolean;
 }
-
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})<AppBarProps>(({ theme, open }) => ({
+  shouldForwardProp: (prop) => prop !== 'open' && prop !== 'movingAppBar',
+})<IAppBarProps>(({ theme, open, movingAppBar }) => ({
   zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create(['width', 'margin'], {
     easing: theme.transitions.easing.easeInOut,
@@ -58,8 +52,12 @@ const AppBar = styled(MuiAppBar, {
       width: '100%',}),
 }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
+interface IAppDrawerProps{
+  hideOnClose: boolean;
+}
+const Drawer = styled(MuiDrawer, { 
+  shouldForwardProp: (prop) => prop !== 'open' && prop !== 'hideOnClose' 
+})<IAppDrawerProps>(({ theme, open, hideOnClose }) => ({
     // width: drawerWidth,
     overflow: 'hidden',
     flexShrink: 0,
@@ -79,24 +77,30 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
         // }
       }
     } : {
-      ...closed(theme),
-      '& .MuiDrawer-paper': closed(theme),
+      ...closed(theme, hideOnClose),
+      '& .MuiDrawer-paper': closed(theme, hideOnClose),
     }),
   }),
 );
 
 interface IDrawerProps{
-  renderSiderBar: boolean;
+  renderSideBar: boolean;
   renderNavBar: boolean;
   children: React.ReactElement;
 }
 export default function MiniDrawer(props: IDrawerProps) {
-  const {renderSiderBar, renderNavBar} = props;
-
+  const {renderSideBar, renderNavBar} = props;
+  
   const theme = useTheme();
 
-  const [open, setOpen] = React.useState(false);
+  const sideBarConfig = useSelectSideBarConfig();
+  const {width, height} = useWindowDimensions();
+  const hideOnClose = sideBarConfig.hideOnClose || width <= 500 || !renderSideBar ;
+  
+  const navBarConfig = useSelectNavBarConfig();
+  const movingAppBar = !navBarConfig.isStatic;
 
+  const [open, setOpen] = React.useState(false);
   const handleDrawerChange = (val: boolean) => {
     setOpen(val);
   };
@@ -104,14 +108,15 @@ export default function MiniDrawer(props: IDrawerProps) {
   return (
     <Box style={{height: '100vh'}}>
       {renderNavBar && (
-        <AppBar position="fixed" open={renderNavBar && open}>
+        <AppBar position="fixed" open={renderNavBar && open} movingAppBar={movingAppBar}>
             <ToolBar isOpen={renderNavBar && open} handleDrawerChange={handleDrawerChange}/>
         </AppBar>
       )}
-      {renderSiderBar && (
+      {renderSideBar && (
         <Drawer 
           variant="permanent" 
-          open={renderSiderBar && open}
+          open={renderSideBar && open}
+          hideOnClose={hideOnClose}
           PaperProps = {{
             style: {
               transition: theme.transitions.create(['transform', 'margin', 'height', 'width', 'top', 'left'], {
@@ -164,7 +169,7 @@ export default function MiniDrawer(props: IDrawerProps) {
                 }}
                 src={ucyIcon} />
             </Box>
-            <SideBar isOpen={renderSiderBar && open}/>
+            <SideBar isOpen={renderSideBar && open}/>
           </Box>
         </Drawer>
       )}
@@ -172,9 +177,9 @@ export default function MiniDrawer(props: IDrawerProps) {
         component="main" 
         style={{
           height: `calc(100vh - 64px)`,
-          width: `calc(100vw -${(renderSiderBar && open) ? `${drawerWidth}px` : 
+          width: `calc(100vw -${(renderSideBar && open) ? `${drawerWidth}px` : 
             hideOnClose ? '0px' : `${theme.spacing(7)}`})`,
-          marginLeft: (renderSiderBar && open) ? `${drawerWidth}px` : 
+          marginLeft: (renderSideBar && open) ? `${drawerWidth}px` : 
             hideOnClose ? '0px' : `${theme.spacing(7)}`,
           transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.easeInOut,
@@ -182,7 +187,7 @@ export default function MiniDrawer(props: IDrawerProps) {
           }),
         }}
       >
-        {renderSiderBar && (
+        {renderSideBar && (
           <DrawerHeader/>
         )}
         {props.children}

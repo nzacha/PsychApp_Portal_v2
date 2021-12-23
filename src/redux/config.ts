@@ -1,6 +1,7 @@
 export enum ReducerKeys {
     AUTH_REDUCER = 'AuthReducer',
     COMMON_REDUCER = 'CommonReducer',
+    QUERY_PAGE_REDUCER = 'QueryPageReducer',
     PROJECTS_MANAGER_REDUCER = 'ProjectsManagerReducer',
     MY_PROJECT_MANAGER_REDUCER = 'MyProjectManagerReducer',
     USER_MANAGER_REDUCER = 'UserManagerReducer',

@@ -11,19 +11,22 @@ import { ModelNamesEnum } from "../../config/models";
 import { HttpMethod } from "../../config/httpMethods";
 import { SET_PROJECT_LIST } from "./store/types";
 import { useDispatch } from "react-redux";
+import { useSelectAuthData } from "../../redux/staticReducers/authReducer/selectors";
 
 const ProjectManager = React.memo(() => {
     const dispatch = useDispatch();
     const theme = useTheme();
 
+    const user = useSelectAuthData();
     const projectList = useGetProjectList();
 
     React.useEffect(() => {
-        defaultAPIAction({
-            path: `/${ModelNamesEnum.Project}/list/${1}`,
-            method: HttpMethod.GET,
-        })(dispatch, SET_PROJECT_LIST)  
-    }, [dispatch])
+        if(user.data)
+            defaultAPIAction({
+                path: `/${ModelNamesEnum.Project}/list/${user.data.user_id}`,
+                method: HttpMethod.GET,
+            })(dispatch, SET_PROJECT_LIST)  
+    }, [dispatch, user])
 
     return (
         <Fade in={true} timeout={drawerTransitionTime}>
@@ -33,7 +36,7 @@ const ProjectManager = React.memo(() => {
                     My Projects
                 </Typography>
                 <Typography variant='h6' paragraph>Here, you can edit your projects</Typography>
-                <GridContainer md={8} xs={10}>
+                <GridContainer md={10} xs={12}>
                     <>
                     <GridContainer lg={6} md={9} xs={12} justify={'flex-end'}>
                         <SearchBar/>

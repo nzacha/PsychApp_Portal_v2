@@ -10,7 +10,7 @@ export const useGetProjectList = (): IState['projectList'] => {
   );
 };
 
-export const useGetSelectedProject = (): IState['selectedProject'] => {
+export const useGetSelectedProjectID = (): IState['selectedProject'] => {
   return useSelector(
     (state: any) => (state[ReducerKeys.MY_PROJECT_MANAGER_REDUCER] as IState).selectedProject,
     shallowEqual

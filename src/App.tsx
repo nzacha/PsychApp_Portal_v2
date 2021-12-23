@@ -35,7 +35,6 @@ import { configAxios } from './config/request';
 import { showSnackBar } from './components/Snackbar';
 import { LOG_IN } from './redux/staticReducers/authReducer/types';
 
-
 function App() {
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -51,42 +50,43 @@ function App() {
         body: { token: getToken() }, 
         onFinish: (success, res) => {
           if(success){
-            setToken(res.data.response.user.token, (res) => {
-              defaultAction({data: {token: res}})(dispatch, LOG_IN)
-            })
+            const user = res.data.response.user; 
+            user.token = getToken();
+            defaultAction({data: user})(dispatch, LOG_IN)
             defaultAPIAction({
-              path: `/${ModelNamesEnum.Project}/list/${1}`,
+              path: `/${ModelNamesEnum.Project}/list/${user.user_id}`,
               method: HttpMethod.GET,
               onFinish: (success, res) => {
                 if(success && res?.data?.response?.length > 0){
-                  defaultAction({data: 0})(dispatch, SET_SELECTED_PROJECT)
+                  defaultAction({data: res.data.response[0].project_id})(dispatch, SET_SELECTED_PROJECT)
                 }
               }
             })(dispatch, SET_PROJECT_LIST)   
           }else{
-            setToken(null, (res) => {
-              defaultAction({data: {token: res}})(dispatch, LOG_IN)
+            setToken(null, () => {
+              defaultAction({data: null})(dispatch, LOG_IN)
             })
           }
         }
-      })(dispatch, '');
+      })(dispatch);
     } else {
-      showSnackBar({message: 'Session Expired', severity: 'error'})(dispatch)
+      // showSnackBar({message: 'Session Expired', severity: 'error'})(dispatch)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, [dispatch, isLoggedIn]);
 
   React.useEffect(() => {
-    if(user.status == ActionStatus.Success)
+    if(user.status == ActionStatus.Success){
       setIsLoggedIn(Boolean(user.data?.token));
-  }, [user]);
+    } 
+  }, [user, getToken()]);
 
   return (
     <AppProvider>
       <ThemeProvider theme={theme}>
         <CookiesProvider>
           <BrowserRouter>
-              <NavBars renderSiderBar={isLoggedIn} renderNavBar={isLoggedIn} >
+              <NavBars renderSideBar={isLoggedIn} renderNavBar={isLoggedIn} >
                 <Switch>
                   <Route key={'login'} path="/login" component={LoginPage} />
                   <Route key={'register'} path="/register" component={RegisterPage} />

@@ -20,6 +20,7 @@ import { HttpMethod } from '../../config/httpMethods';
 import { DELETE_USER, INSERT_USER, UPDATE_USER } from './store/types';
 
 interface IUserProps{
+  index: number;
   data: IUserData;
   users: IUserData[];
   setUsers: React.Dispatch<any>;
@@ -44,7 +45,7 @@ function User(props: IUserProps) {
     <React.Fragment>
       <TableRow style={{flex: 1}}>
         <TableCell align="left" style={{width: '10%'}}>
-          {data.user_id}
+          {props.index}
         </TableCell>
         <TableCell align="center" style={{width: '30%'}}>
           <TextField 
@@ -267,8 +268,8 @@ export function UsersDatatable(props: IUserDatatableProps) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.users.map((user) => (
-            <User key={user.user_id} data={user} users={props.users} setUsers={props.setUsers} />
+          {props.users.map((user, index) => (
+            <User key={user.user_id} index={index+1} data={user} users={props.users} setUsers={props.setUsers} />
           ))}
         </TableBody>
       </Table>

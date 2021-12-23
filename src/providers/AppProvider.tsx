@@ -2,7 +2,7 @@ import React, { Dispatch } from "react";
 import { SnackbarProvider, useSnackbar, VariantType } from 'notistack';
 import { SET_STACKED_SNACKBAR_DATA } from "../redux/staticReducers/commonReducer/types";
 import { defaultAction } from "../redux/common/actions";
-import { useSelectStackedSnackbarData } from "../redux/staticReducers/commonReducer/selectors";
+import { useSelectStackedSnackBarData } from "../redux/staticReducers/commonReducer/selectors";
 import { normalDuration} from "../components/Snackbar/config";
 import { AppSnackbar } from "../components/Snackbar";
 
@@ -21,7 +21,7 @@ export function showStackedSnackBar(data: IStackedSnackBarOptions){
 }
 
 const AppStackedSnackbar:React.FC = (props) => {
-    const stackedSnackbar = useSelectStackedSnackbarData();
+    const stackedSnackbar = useSelectStackedSnackBarData();
     const { enqueueSnackbar } = useSnackbar();
     
     React.useEffect(()=>{

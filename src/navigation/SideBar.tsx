@@ -1,4 +1,4 @@
-import { Box, List, ListItemIcon, ListItem, ListItemText, Divider, useTheme, Collapse, ListItemButton, Fade } from "@mui/material"
+import { Box, List, ListItemIcon, ListItem, ListItemText, Divider, useTheme, Collapse, ListItemButton, Fade, Tooltip } from "@mui/material"
 import { useHistory } from "react-router-dom";
 
 import QueryIcon from '@mui/icons-material/QueryStats';
@@ -14,14 +14,18 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import _ from 'lodash';
 import { useState } from "react";
 import React from "react";
-import { drawerTransitionTime, hideOnClose } from ".";
+import { drawerTransitionTime } from ".";
 import { playTapSound } from "../config/soundPlayer";
+import { useSelectAuthData } from "../redux/staticReducers/authReducer/selectors";
+import { useSelectSideBarConfig } from "../redux/staticReducers/commonReducer/selectors";
 
 interface ISideMenuItem{
     id: number;
     label: string;
     pagePath: string;
     icon: JSX.Element;
+    disabled?: boolean;
+    requireAdmin?: boolean;
     subItems?: ISideMenuItem[]; 
 }
 
@@ -53,6 +57,7 @@ const sideBarItems: ISideMenuItem[][] = [
             label: 'Administration',
             pagePath: 'userManagement',
             icon: <PeopleIcon/>,
+            requireAdmin: true,
             subItems: [{
                 id: 9,
                 label: 'User Management',
@@ -80,6 +85,7 @@ const sideBarItems: ISideMenuItem[][] = [
                 label: 'Settings',
                 pagePath: 'settings',
                 icon: <SettingsIcon/>,
+                disabled: true,
             },{
                 id: 7,
                 label: 'Log Out',
@@ -96,15 +102,18 @@ interface IMenuItemProps{
     menuStates: {};
     alterState: (id: number) => void;
     renderIcon?: boolean;
+    disabled?: boolean;
 }
 
 function MenuItem(props: IMenuItemProps){
     const {listItem, alterState, menuStates, renderIcon = true} = props;
     const history = useHistory();
     const theme = useTheme();
+    const sideBarConfig = useSelectSideBarConfig();
 
     return (
     <ListItem 
+        disabled={props.listItem.disabled}
         button 
         onClick={(event) => {
             playTapSound();
@@ -120,7 +129,7 @@ function MenuItem(props: IMenuItemProps){
                 easing: theme.transitions.easing.easeInOut,
                 duration: drawerTransitionTime,
             }),                                        
-            ...(!hideOnClose && !props.isOpen
+            ...(!sideBarConfig.hideOnClose && !props.isOpen
                 ? {
                     paddingLeft: '1em',
                 }: {
@@ -184,26 +193,27 @@ function MenuSubItem(props: IMenuSubItemProps){
             }}
         >
             <ListItemButton 
-                style={{ 
-                    boxSizing: 'border-box',
-                    paddingLeft: '4em',
-                }}
-                onClick={(event) => {
-                    playTapSound();
-                    history.push(subItem.pagePath);
-                }}
-            >
-                <ListItemText 
-                    primary={subItem.label} 
-                    style={{    
-                        overflow: 'hidden',
-                    }}
-                />
-                {renderIcon && (
-                    <ListItemIcon >
-                        {subItem.icon}
-                    </ListItemIcon>)}
-            </ListItemButton>
+                        disabled={props.subItem.disabled}
+                        style={{ 
+                            boxSizing: 'border-box',
+                            paddingLeft: '4em',
+                        }}
+                        onClick={(event) => {
+                            playTapSound();
+                            history.push(subItem.pagePath);
+                        }}
+                    >
+                        <ListItemText 
+                            primary={subItem.label} 
+                            style={{    
+                                overflow: 'hidden',
+                            }}
+                        />
+                        {renderIcon && (
+                            <ListItemIcon >
+                                {subItem.icon}
+                            </ListItemIcon>)}
+            </ListItemButton> 
         </Box>
     )
 }
@@ -214,7 +224,8 @@ interface IProps{
 export default function SideBar(props: IProps){
     const theme = useTheme();
     // console.log(theme);
-  
+    const user = useSelectAuthData();
+    
     const [menuStates, setMenuStates] = useState<{}>({});
     React.useEffect(()=>{
         const states = {};
@@ -235,6 +246,7 @@ export default function SideBar(props: IProps){
         _.set(state, id, !_.get(state, id));
         setMenuStates(state);
     }
+    // console.log(user);
     return(
         <List style={{
             backgroundColor: theme.palette.background.paper,
@@ -245,36 +257,47 @@ export default function SideBar(props: IProps){
                 return (
                     <Box key={sectionIndex}>
                         {sections.map((listItem, listItemIndex) => {
-                            return (
-                                <Box key={sectionIndex+'_'+listItemIndex}>
-                                    <MenuItem 
-                                        listItem={listItem} 
-                                        isOpen={props.isOpen} 
-                                        menuStates={menuStates} 
-                                        alterState={alterState} 
-                                    />  
-                                    {listItem?.subItems && (
-                                        <Collapse in={!_.get(menuStates, listItem.id) && props.isOpen} timeout={drawerTransitionTime/2} unmountOnExit>
-                                            <Fade in={!_.get(menuStates, listItem.id) && props.isOpen} timeout={drawerTransitionTime}>
-                                            <List component="div" disablePadding>
-                                                {listItem.subItems.map((subItem, subItemIndex) => {
-                                                    return(
-                                                        <MenuSubItem
-                                                            key={subItemIndex}
-                                                            subItem={subItem} 
-                                                            isOpen={props.isOpen} 
-                                                            menuStates={menuStates} 
-                                                            alterState={alterState} 
-                                                        />
+                            if(!listItem.requireAdmin || (listItem.requireAdmin && user.data?.is_super_user)){
+                                return (
+                                    <Box key={sectionIndex+'_'+listItemIndex}>
+                                        <MenuItem 
+                                            listItem={listItem} 
+                                            isOpen={props.isOpen} 
+                                            menuStates={menuStates} 
+                                            alterState={alterState} 
+                                        />  
+                                        {listItem?.subItems && (
+                                            <Collapse in={!_.get(menuStates, listItem.id) && props.isOpen} timeout={drawerTransitionTime/2} unmountOnExit>
+                                                <Fade in={!_.get(menuStates, listItem.id) && props.isOpen} timeout={drawerTransitionTime}>
+                                                <List component="div" disablePadding>
+                                                    {listItem.subItems.map((subItem, subItemIndex) => {
+                                                        const renderItem = (
+                                                            <MenuSubItem
+                                                                key={subItemIndex}
+                                                                subItem={subItem} 
+                                                                isOpen={props.isOpen} 
+                                                                menuStates={menuStates} 
+                                                                alterState={alterState} 
+                                                            />);
+                                                        return (
+                                                            subItem.disabled ? (
+                                                                <Tooltip title={'currently unavailable'}>
+                                                                <span>
+                                                                {renderItem}
+                                                                </span>
+                                                                </Tooltip>
+                                                            ) : renderItem
+                                                        )}
                                                     )}
-                                                )}
-                                            </List>
-                                            </Fade>
-                                        </Collapse>
-                                    )}
-                                </Box>
-                            )    
-                        })}
+                                                </List>
+                                                </Fade>
+                                            </Collapse>
+                                        )}
+                                    </Box>
+                                )
+                            }else{
+                                return <span key={sectionIndex+'_'+listItemIndex}/>
+                            }})}
                         <Divider/>
                     </Box>
                 )

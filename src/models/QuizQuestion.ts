@@ -1,4 +1,5 @@
 import { BaseModel } from "../config/models";
+import { IQuizOptionData } from "./QuizOption";
 
 export enum QuizQuestionType{
     TEXT = 'Text',
@@ -7,14 +8,17 @@ export enum QuizQuestionType{
 
 export enum QuizQuestionAlignment{
     HORIZONTAL = 'Horizontal',
-    VERTICAL = 'Verical'
+    VERTICAL = 'Vertical'
 }
 
 export interface IQuizQuestionData extends BaseModel{
     question_id: number;
+    question: string;
     type: QuizQuestionType;
     alignment: QuizQuestionAlignment;
-    question: string;
+    levels: number;
+    request_reason: boolean;
+    question_options: IQuizOptionData[];
     section_id: number;
 }
 

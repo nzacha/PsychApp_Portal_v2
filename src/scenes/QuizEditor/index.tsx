@@ -3,6 +3,7 @@ import React, { Dispatch } from "react";
 import { Box, Fade, Paper, Typography, useTheme } from "@mui/material";
 import { drawerTransitionTime } from "../../navigation";
 import QuizDatatable from "./QuizDatatable";
+import { useGetSelectedProjectID } from '../MyProjectsPage/store/selectors';
 
 import DescriptionIcon from '@mui/icons-material/DescriptionOutlined';
 import { useGetQuizList } from "./store/selectors";
@@ -14,9 +15,9 @@ import { ModelNamesEnum } from "../../config/models";
 import { HttpMethod } from "../../config/httpMethods";
 import Title from '../../components/common/Title';
 
-const refreshQuizList= (dispatch: Dispatch<any>) => {
+const refreshQuizList= (dispatch: Dispatch<any>, project_id: number) => {
   defaultAPIAction({
-    path: `/${ModelNamesEnum.Quiz}/list/${1}`,
+    path: `/${ModelNamesEnum.Quiz}/list/${project_id}`,
     method: HttpMethod.GET,
   })(dispatch, SET_QUIZ_LIST)
 }
@@ -24,15 +25,13 @@ const refreshQuizList= (dispatch: Dispatch<any>) => {
 const QuizEditor = React.memo(() => {
     const dispatch = useDispatch();
     const theme = useTheme();
-    
+
+    const selectedProject = useGetSelectedProjectID();
     const quizList = useGetQuizList();
     React.useEffect(()=>{
-        refreshQuizList(dispatch); 
-    },[dispatch])
-    
-    React.useEffect(()=>{
-        // console.log(quizList)
-    },[quizList])
+      if(selectedProject)
+        refreshQuizList(dispatch, selectedProject); 
+    },[dispatch, selectedProject])
     
     return (
       <Fade in={true} timeout={drawerTransitionTime}>
@@ -59,7 +58,9 @@ const QuizEditor = React.memo(() => {
                     title={quiz.name}
                   />
                 </Box>
-                <QuizDatatable index={quizIndex} data={quiz || null} onRefresh={() => {refreshQuizList(dispatch)}}/>
+                <QuizDatatable index={quizIndex} data={quiz || null} onRefresh={() => {
+                  if(selectedProject) refreshQuizList(dispatch, selectedProject)
+                }}/>
               </Box> 
             )}
           )}

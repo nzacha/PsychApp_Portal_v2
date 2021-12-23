@@ -9,13 +9,13 @@ import { grey } from '@mui/material/colors';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IProjectData } from '../../models/Project';
 import { ExpandMoreWrapper } from '../../components/common/ExpandMore';
-import { useGetSelectedProject } from './store/selectors';
+import { useGetSelectedProjectID } from './store/selectors';
 import { useDispatch } from 'react-redux';
 import { defaultAction, defaultAPIAction } from '../../redux/common/actions';
 import { SET_SELECTED_PROJECT, UPDATE_PROJECT } from './store/types';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import Title from '../../components/common/Title';
-import { ProjectProjectDetail } from './ProjectDetails';
+import { ProjectDetail } from './ProjectDetails';
 import { ModelNamesEnum } from '../../config/models';
 import { HttpMethod } from '../../config/httpMethods';
 
@@ -31,7 +31,7 @@ function Project(props: IProjectProps){
     const theme = useTheme();
 
     const [isOpen, setOpen] = React.useState(false)
-    const selectedProject = useGetSelectedProject();
+    const selectedProject = useGetSelectedProjectID();
 
     return (
         <Card style={{flexGrow: 1}}>
@@ -42,8 +42,8 @@ function Project(props: IProjectProps){
                     <Box flexDirection={'row'} style={{display: 'flex', alignItems: 'center'}}>
                         <Avatar 
                             // eslint-disable-next-line eqeqeq
-                            style={{display: 'flex-inline', width: '56px', height: '56px', backgroundColor: selectedProject == index ? theme.palette.primary.light : grey[300]}}>
-                            <IconButton onClick={(event) => defaultAction({data: index})(dispatch, SET_SELECTED_PROJECT)}>
+                            style={{display: 'flex-inline', width: '56px', height: '56px', backgroundColor: selectedProject == data.project_id ? theme.palette.primary.light : grey[300]}}>
+                            <IconButton onClick={(event) => defaultAction({data: data.project_id})(dispatch, SET_SELECTED_PROJECT)}>
                                 <DoubleArrowIcon/>
                             </IconButton>
                         </Avatar>
@@ -94,7 +94,7 @@ function Project(props: IProjectProps){
             </CardActions>
             <Collapse in={isOpen} timeout="auto" unmountOnExit={false}>
                 <CardContent>
-                    <ProjectProjectDetail data={data}/>
+                    <ProjectDetail data={data}/>
                 </CardContent>
             </Collapse>
         </Card>

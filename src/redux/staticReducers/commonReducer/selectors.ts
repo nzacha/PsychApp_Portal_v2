@@ -9,9 +9,25 @@ export const useSelectSnackBarData = (): IState['snackbar'] => {
   );
 };
   
-export const useSelectStackedSnackbarData = (): IState['stackedSnackbar'] => {
+export const useSelectStackedSnackBarData = (): IState['stackedSnackbar'] => {
   return useSelector(
     (state: any) => (state[ReducerKeys.COMMON_REDUCER] as IState).stackedSnackbar,
+    shallowEqual
+  );
+};
+  
+  
+export const useSelectSideBarConfig = (): IState['sideBar'] => {
+  return useSelector(
+    (state: any) => (state[ReducerKeys.COMMON_REDUCER] as IState).sideBar,
+    shallowEqual
+  );
+};
+
+
+export const useSelectNavBarConfig = (): IState['navBar'] => {
+  return useSelector(
+    (state: any) => (state[ReducerKeys.COMMON_REDUCER] as IState).navBar,
     shallowEqual
   );
 };

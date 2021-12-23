@@ -17,10 +17,10 @@ const initialValue: IState = {
   }
 }
 
-export function setToken(token: string | null, onFinish: (value: string | null) => void) {
+export function setToken(token?: string | null, onFinish?: (value: string | null) => void) {
   if(token) localStorage.setItem('token', JSON.stringify(token));
   else localStorage.removeItem('token')
-  onFinish(token);
+  if(onFinish) onFinish(token || null);
 }
 
 export function getToken(): string | null{

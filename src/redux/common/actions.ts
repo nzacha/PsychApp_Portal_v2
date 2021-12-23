@@ -27,7 +27,7 @@ interface IDefaultAPIActionProps{
     displayInConsole?: boolean;
 }
 
-export const defaultAPIAction = ({displayInSnackbar = true, displayInConsole = false, ...props}: IDefaultAPIActionProps) => {
+export const defaultAPIAction = ({displayInSnackbar = process.env.NODE_ENV !== 'production', displayInConsole = false, ...props}: IDefaultAPIActionProps) => {
     return async (dispatch: Dispatch<any>, type: string = '') => {
         try{
             dispatch({
@@ -41,7 +41,7 @@ export const defaultAPIAction = ({displayInSnackbar = true, displayInConsole = f
                 status: res.status,
                 data: res.data?.response
             });
-            if(props.onFinish) props.onFinish(res.status === SUCCESS ? true : false, res);
+            if(props.onFinish) props.onFinish(res.status === SUCCESS, res);
             if(displayInSnackbar) {
                 // console.log(res);
                 showStackedSnackBar({message: res.message, options: { variant: res.status}})(dispatch);

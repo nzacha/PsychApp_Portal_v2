@@ -13,6 +13,7 @@ import { LOG_IN } from '../../redux/staticReducers/authReducer/types';
 import { HttpMethod } from '../../config/httpMethods';
 import { setToken } from '../../redux/staticReducers/authReducer/reducer';
 import { RequiredField } from '../../components/common/FormControl/RequiredField';
+import { showSnackBar } from '../../components/Snackbar';
 
 interface IRegisterForm{
     email: string;
@@ -71,6 +72,9 @@ function LoginPage(){
 														if(success){
 															setToken(result?.data?.response?.token);
 															history.push('/');
+														}else{
+															console.log(result)
+															showSnackBar({message: result?.message || 'Error while communicating with database', severity: 'error'})(dispatch);
 														}
 													}
 												})(dispatch, LOG_IN)

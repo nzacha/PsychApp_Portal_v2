@@ -28,6 +28,7 @@ import Title from '../../components/common/Title';
 import EditIcon from '@mui/icons-material/Edit';
 import AnchoredTooltip from '../../components/Tooltip/AnchoredTooltip';
 import { QuestionColumns } from './QuestionColumns';
+import { Delete } from '@mui/icons-material';
 
 interface ISectionProps{
   index: number;
@@ -85,11 +86,25 @@ function Section(props: ISectionProps){
                 <EditIcon/>
               </IconButton>
               <IconButton
-                size="small"
                 onClick={() => setOpen(!isOpen)}
                 style={{marginLeft: '1em'}}
               >
                 {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              </IconButton>
+              <IconButton
+                style={{marginLeft: '1em'}}
+                onClick={() => {
+                  defaultAPIAction({
+                    path: `/${ModelNamesEnum.Quiz_Section}/${props.data.section_id}`,
+                    method: HttpMethod.DELETE,
+                    onFinish: (s, r) => {
+                      if(s){
+                        props.onRefresh();
+                      }
+                    }
+                  })(dispatch, '')}}
+              >
+                <Delete/>
               </IconButton>
             </Box>
           </TableCell>

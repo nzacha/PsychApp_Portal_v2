@@ -12,7 +12,7 @@ const Prodution: Environment = {
 
 const Development: Environment = {
     API_BASE_URL: 'http://localhost:5000',
-    APP_NAME: 'PsychApp Development',
+    APP_NAME: 'PsycleachApp Development',
     STATIC_FILES_URL: 'http://localhost:5000/static',
 };
 

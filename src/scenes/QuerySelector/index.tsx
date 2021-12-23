@@ -79,6 +79,7 @@ const QuerySelector = React.memo(() => {
                 path: `/${ModelNamesEnum.Quiz_Answer}/list/${participantCode.value}`,
                 method: HttpMethod.GET,
             })(dispatch, SET_ANSWER_LIST)
+
         return () => {
             defaultAction({data: null})(dispatch, SET_ANSWER_LIST);
         }
@@ -99,12 +100,16 @@ const QuerySelector = React.memo(() => {
                     label={'code'} 
                     value={participantCode.value} 
                     onChange={(event) => {
-                        setParticipantCode(newFormItem(event.currentTarget.value, false));
+                        if(event.currentTarget.value !== participantCode.value)
+                            setParticipantCode(newFormItem(event.currentTarget.value, false));
                     }}
                     onBlur={(event) => {
                         setParticipantCode(newFormItem(participantCode.value, true));
                     }}
                 />
+            </Box>
+            <Box display={'flex'} justifyContent={'flex-end'}>
+                {participantCode.hasChanged && (<>{answerList.data?.length || 0} answers found</>)}
             </Box>
             <Box display={answerList?.data?.length && answerList.data.length > 0 ? 'flex' : 'none'} justifyContent={'flex-end'}>
                 <DownloadQueryButton data={answerList.data || []}/>

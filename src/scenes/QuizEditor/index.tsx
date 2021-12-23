@@ -1,6 +1,6 @@
 import React, { Dispatch } from "react";
 
-import { Box, Fade, Paper, Typography, useTheme } from "@mui/material";
+import { Box, Fade, IconButton, Paper, Tooltip, Typography, useTheme } from "@mui/material";
 import { drawerTransitionTime } from "../../navigation";
 import QuizDatatable from "./QuizDatatable";
 import { useGetSelectedProjectID } from '../MyProjectsPage/store/selectors';
@@ -14,6 +14,9 @@ import { SET_QUIZ_LIST, UPDATE_QUIZ_DETAIL } from "./store/types";
 import { ModelNamesEnum } from "../../config/models";
 import { HttpMethod } from "../../config/httpMethods";
 import Title from '../../components/common/Title';
+import AnchoredTooltip from "../../components/Tooltip/AnchoredTooltip";
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/PostAdd';
 
 const refreshQuizList= (dispatch: Dispatch<any>, project_id: number) => {
   defaultAPIAction({
@@ -45,6 +48,7 @@ const QuizEditor = React.memo(() => {
             return (
               <Box flexGrow={1} key={quiz.quiz_id}>
                 <Box display={'flex'} >
+                <AnchoredTooltip message={'Click on the title to modify it'}>
                   <Title variant={'h5'} contentEditable={true}
                     onBlur={(event) => {
                       defaultAPIAction({
@@ -57,6 +61,37 @@ const QuizEditor = React.memo(() => {
                     }}
                     title={quiz.name}
                   />
+                </AnchoredTooltip>
+                <IconButton
+                  size="small"
+                  disabled
+                  style={{marginLeft: '1em'}}
+                >
+                  <EditIcon/>
+                </IconButton>
+                <Tooltip title={'Add new Section'}>
+                  <IconButton
+                    // size="small"
+                    style={{marginLeft: '1em'}}
+                    onClick={() => {
+                      defaultAPIAction({
+                        path: `/${ModelNamesEnum.Quiz_Section}/`,
+                        method: HttpMethod.PUT,
+                        body: {
+                            quiz_id: quiz.quiz_id,
+                            name: 'New Section'
+                        },
+                        onFinish: (s, r) => {
+                          if(s){
+                            if(selectedProject) refreshQuizList(dispatch, selectedProject);
+                          }
+                        }
+                      })(dispatch, UPDATE_QUIZ_DETAIL)    
+                    }}
+                  >
+                    <AddIcon/>
+                  </IconButton>
+                </Tooltip>
                 </Box>
                 <QuizDatatable index={quizIndex} data={quiz || null} onRefresh={() => {
                   if(selectedProject) refreshQuizList(dispatch, selectedProject)

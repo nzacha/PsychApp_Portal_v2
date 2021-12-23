@@ -181,14 +181,6 @@ function User(props: IUserProps) {
           </IconButton>
       </TableCell>
       </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
     </React.Fragment>
   );
 }
@@ -216,6 +208,7 @@ export function UsersDatatable(props: IUserDatatableProps) {
             id="name"
             label="Email Address"
             type="email"
+            autoComplete={'none'}
             fullWidth
             variant="standard"
             value={newEmail}
@@ -224,7 +217,7 @@ export function UsersDatatable(props: IUserDatatableProps) {
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setOpen(false)}>Cancel</Button>
-        <Button onClick={() => {
+        <Button disabled={newEmail.length === 0} onClick={() => {
           if (isValidEmail(newEmail)){
             defaultAPIAction({
               path: `/user/new`,
@@ -247,7 +240,7 @@ export function UsersDatatable(props: IUserDatatableProps) {
           }else{
             console.log('invalid email')
           }
-        }}>Subscribe</Button>
+        }}>Add</Button>
       </DialogActions>
     </Dialog>
     <TableContainer component={Paper}>
@@ -264,7 +257,7 @@ export function UsersDatatable(props: IUserDatatableProps) {
               }}>
                   <PostAddIcon/>
               </IconButton>
-          </TableCell>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

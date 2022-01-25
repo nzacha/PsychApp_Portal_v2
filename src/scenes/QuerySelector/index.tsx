@@ -22,7 +22,7 @@ function downloadQuery(query: IQuizAnswerData[]){
     let delimiter = ",";
     let header = arrayHeader.join(delimiter) + '\n';
     
-  	query.sort((el1, el2) => el1.answer_id - el2.answer_id);
+  	query = query.sort((el1, el2) => el1.answer_id - el2.answer_id);
     let data = [];
     for(var i=0; i<query.length; i++){      
       const answer = query[i];     

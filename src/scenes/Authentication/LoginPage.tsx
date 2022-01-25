@@ -12,7 +12,7 @@ import { defaultAction, defaultAPIAction } from '../../redux/common/actions';
 import { LOG_IN } from '../../redux/staticReducers/authReducer/types';
 import { HttpMethod } from '../../config/httpMethods';
 import { setToken } from '../../redux/staticReducers/authReducer/reducer';
-import { RequiredField } from '../../components/common/FormControl/RequiredField';
+import { RequiredField } from '../../components/common/FormControl';
 import { showSnackBar } from '../../components/Snackbar';
 
 interface IRegisterForm{
@@ -49,11 +49,11 @@ function LoginPage(){
 							},{
 								id: 'username',
 								// error helperText={'hello'} 
-								element: (<ControlledTextField name={'email'} control={control} rules={{required: <RequiredField/>}} label={'Username'} size={'medium'} variant={'outlined'} fullWidth/>),
+								element: (<ControlledTextField name={'email'} control={control} rules={{required: RequiredField()}} label={'Username'} size={'medium'} variant={'outlined'} fullWidth/>),
 								xs: 12,
 							},{
 								id: 'password',
-								element: (<ControlledTextField type={'password'} name={'password'} rules={{required: <RequiredField/>}} control={control} label={'Password'} size={'medium'} variant={'outlined'} fullWidth/>),
+								element: (<ControlledTextField type={'password'} name={'password'} rules={{required: RequiredField()}} control={control} label={'Password'} size={'medium'} variant={'outlined'} fullWidth/>),
 								xs: 12,
 							},{
 								id: 'submit',

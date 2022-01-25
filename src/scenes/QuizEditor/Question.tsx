@@ -213,7 +213,7 @@ export const Question = React.memo(
                                 method: HttpMethod.PUT,
                                 body: {
                                   question_id: props.data.question_id,
-                                  option: "new option"
+                                  option: ""
                                 },
                                 onFinish: (success: boolean, payload) => {
                                   console.log(payload);

@@ -47,14 +47,9 @@ function Section(props: ISectionProps){
   React.useEffect(() => {
     setName(newFormItem(props.data.name || '', false));
     setDescription(newFormItem(props.data.description || '', false));
-    setQuestions(props.data.quiz_questions || []);
+    setQuestions((props.data.quiz_questions || []).sort((el1, el2) => el1.question_id - el2.question_id));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
-  //called every time the data changes to sort it
-  React.useEffect(() => {
-    questions.sort((el1, el2) => el1.question_id - el2.question_id)
-  }, [questions]);
 
   return (
     <TableContainer style={{marginBottom: '2em'}}>

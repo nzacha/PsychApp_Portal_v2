@@ -11,13 +11,14 @@ import Paper from '@mui/material/Paper';
 import { IconButton, TextField } from '@mui/material';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { defaultAPIAction } from '../../redux/common/actions';
+import { ActionStatus, defaultAPIAction } from '../../redux/common/actions';
 import { DELETE_PARTICIPANT, INSERT_PARTICIPANT } from './store/types';
 import { useDispatch } from 'react-redux';
 import { ModelNamesEnum } from '../../config/models';
 import { HttpMethod } from '../../config/httpMethods';
 import { IProjectParticipantData } from '../../models/ProjectParticipant';
 import { useGetSelectedProjectID} from "../MyProjectsPage/store/selectors";
+import { IFormItem, newFormItem } from '../../config/formItem';
 
 interface IParticipantProps{
   data: IProjectParticipantData;
@@ -29,10 +30,12 @@ function Participant(props: IParticipantProps) {
   const { data } = props;
 
   const [open, setOpen] = React.useState(false);
-  
+  const [name, setName] = React.useState<IFormItem<string>>(newFormItem('', false));
+
   React.useEffect(() => {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+    if(data)
+      setName(newFormItem(data.name || '-', false));
+  }, [data])
 
   return (
     <React.Fragment>
@@ -43,11 +46,32 @@ function Participant(props: IParticipantProps) {
         <TableCell align="center" style={{width: '40%'}}>
           <TextField 
             label={'Name'}
-            InputProps={{
-              readOnly: true,
-            }}
             fullWidth 
-            value={'-'}
+            value={name.value}
+            error={Boolean(name.error)}
+            helperText={name.error}
+            onChange={(e) => {
+              if(e.currentTarget.value != name.value)
+                setName(newFormItem(e.currentTarget.value, true))
+            }}
+            onBlur={(e) => {
+              if(name.hasChanged){
+                defaultAPIAction({
+                  path: `/${ModelNamesEnum.Project_Participant}/${props.data.participant_id}`,
+                  method: HttpMethod.PATCH,
+                  body: {
+                    name: name.value
+                  },
+                  onFinish: (success: boolean, payload) => {
+                    if(success){
+                      setName(newFormItem(payload.data.response.name, false, ActionStatus.Success))
+                    }else{
+                      setName(newFormItem(name.value, false, ActionStatus.Failure, payload.message))
+                    }
+                  }
+                })(dispatch, '')
+              }
+            }}
           />
         </TableCell>
         <TableCell align="center" style={{width: '20%'}}>

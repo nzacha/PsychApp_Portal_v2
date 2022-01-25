@@ -5,15 +5,15 @@ interface Environment {
 }
 
 const Prodution: Environment = {
-    API_BASE_URL: 'http://localhost:5000',
+    API_BASE_URL: 'http://153.92.221.7:5050',
     APP_NAME: 'PsychApp',
     STATIC_FILES_URL: '/static',
 };
 
 const Development: Environment = {
-    API_BASE_URL: 'http://localhost:5000',
+    API_BASE_URL: 'http://153.92.221.7:5050',
     APP_NAME: 'PsycleachApp Development',
-    STATIC_FILES_URL: 'http://localhost:5000/static',
+    STATIC_FILES_URL: '/static',
 };
 
 export default process.env.NODE_ENV === 'production' ? Prodution : Development;

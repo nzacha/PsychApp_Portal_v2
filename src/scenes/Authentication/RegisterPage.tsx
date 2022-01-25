@@ -10,7 +10,7 @@ import { defaultAction } from '../../redux/common/actions';
 import { LOG_IN } from '../../redux/staticReducers/authReducer/types';
 import { useForm } from 'react-hook-form';
 import { ControlledTextField } from '../../components/common/FormControl/ControlledTextField';
-import { RequiredField } from '../../components/common/FormControl/RequiredField';
+import { RequiredField } from '../../components/common/FormControl';
 import Tooltip from '@mui/material/Tooltip';
 
 interface IRegisterForm {
@@ -58,42 +58,42 @@ function RegisterPage(){
                         <GridLayout elements={[{
                                 id: 'first_name',
                                 element: (
-                                    <ControlledTextField name={'first_name'} control={control} error={'first_name' in formState.errors} helperText={formState.errors.first_name?.message} rules={{required: <RequiredField/>}} label={'First Name'} size={'medium'} variant={'outlined'} style={{marginLeft: '0em'}} fullWidth required />
+                                    <ControlledTextField name={'first_name'} control={control} error={'first_name' in formState.errors} helperText={formState.errors.first_name?.message} rules={{required: RequiredField()}} label={'First Name'} size={'medium'} variant={'outlined'} style={{marginLeft: '0em'}} fullWidth required />
                                 ),
                                 sm: 6,
                                 xs: 12,
                             },{
                                 id: 'last_name',
                                 element: (
-                                    <ControlledTextField name={'last_name'} control={control} error={'last_name' in formState.errors} helperText={formState.errors.last_name?.message} rules={{required: <RequiredField/>}} label={'Last Name'} size={'medium'} variant={'outlined'} style={{marginRight: '0em'}} fullWidth required />
+                                    <ControlledTextField name={'last_name'} control={control} error={'last_name' in formState.errors} helperText={formState.errors.last_name?.message} rules={{required: RequiredField()}} label={'Last Name'} size={'medium'} variant={'outlined'} style={{marginRight: '0em'}} fullWidth required />
                                 ),
                                 sm: 6,
                                 xs: 12,
                             },{
                                 id: 'email',
                                 element: (
-                                    <ControlledTextField name={'email'} control={control} error={'email' in formState.errors} helperText={formState.errors.email?.message} rules={{required: <RequiredField/>}} type={'email'} label={'Email'} size={'medium'} variant={'outlined'} style={{marginLeft: '0em'}} fullWidth required />
+                                    <ControlledTextField name={'email'} control={control} error={'email' in formState.errors} helperText={formState.errors.email?.message} rules={{required: RequiredField()}} type={'email'} label={'Email'} size={'medium'} variant={'outlined'} style={{marginLeft: '0em'}} fullWidth required />
                                 ),
                                 sm: 6,
                                 xs: 12,
                             },{
                                 id: 'username',
                                 element: (
-                                    <ControlledTextField name={'username'} control={control} error={'username' in formState.errors} helperText={formState.errors.username?.message} rules={{required: <RequiredField/>}} label={'Username'} size={'medium'} variant={'outlined'} style={{marginRight: '0em'}} fullWidth required />
+                                    <ControlledTextField name={'username'} control={control} error={'username' in formState.errors} helperText={formState.errors.username?.message} rules={{required: RequiredField()}} label={'Username'} size={'medium'} variant={'outlined'} style={{marginRight: '0em'}} fullWidth required />
                                 ),
                                 sm: 6,
                                 xs: 12,
                             },{
                                 id: 'password',
                                 element: (
-                                    <ControlledTextField name={'password'} control={control} error={'password' in formState.errors} helperText={formState.errors.password?.message} rules={{required: <RequiredField/>, minLength: {value: 8, message: 'Password must contain at least 8 characters'}}} type={'password'} label={'Password'} size={'medium'} variant={'outlined'} style={{marginLeft: '0em'}} fullWidth required />
+                                    <ControlledTextField name={'password'} control={control} error={'password' in formState.errors} helperText={formState.errors.password?.message} rules={{required: RequiredField(), minLength: {value: 8, message: 'Password must contain at least 8 characters'}}} type={'password'} label={'Password'} size={'medium'} variant={'outlined'} style={{marginLeft: '0em'}} fullWidth required />
                                 ),
                                 sm: 6,
                                 xs: 12,
                             },{
                                 id: 'confirm_password',
                                 element: (
-                                    <ControlledTextField name={'confirm_password'} control={control} error={'confirm_password' in formState.errors} helperText={formState.errors.confirm_password?.message} rules={{required: <RequiredField/>, validate: {missmatch: () => (password == confirm_password) || 'Passwords do not match'}}} onBlur={() => {confirm_password.length > 0 && trigger('confirm_password')}} type={'password'} label={'Confirm Password'} size={'medium'} variant={'outlined'} style={{marginRight: '0em'}} fullWidth required />
+                                    <ControlledTextField name={'confirm_password'} control={control} error={'confirm_password' in formState.errors} helperText={formState.errors.confirm_password?.message} rules={{required: RequiredField(), validate: {missmatch: () => (password == confirm_password) || 'Passwords do not match'}}} onBlur={() => {confirm_password.length > 0 && trigger('confirm_password')}} type={'password'} label={'Confirm Password'} size={'medium'} variant={'outlined'} style={{marginRight: '0em'}} fullWidth required />
                                 ),
                                 sm: 6,
                                 xs: 12,

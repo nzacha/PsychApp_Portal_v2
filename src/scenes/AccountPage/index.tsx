@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Fade, Paper, TextField, Typography, useTheme } from "@mui/material";
+import { Alert, AlertTitle, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Fade, Paper, Stack, TextField, Typography, useTheme } from "@mui/material";
 import { drawerTransitionTime } from "../../navigation";
 import { useDispatch } from "react-redux";
 import GridLayout from "../../components/common/GridLayout";
@@ -9,6 +9,8 @@ import { defaultAPIAction } from "../../redux/common/actions";
 import { ModelNamesEnum } from "../../config/models";
 import { HttpMethod } from "../../config/httpMethods";
 import { useSelectAuthData } from "../../redux/staticReducers/authReducer/selectors";
+import { showSnackBar } from "../../components/Snackbar";
+import { ChangePasswordDialog } from "./ChangePasswordDialog";
 
 const UserEditor = React.memo(() => {
     const dispatch = useDispatch();
@@ -36,8 +38,10 @@ const UserEditor = React.memo(() => {
             })(dispatch, '') 
     }, [dispatch, user]);
 
-    
+    const [open, setOpen] = useState(false);
     return (
+    <>
+        <ChangePasswordDialog open={open} setOpen={setOpen}/>
         <Fade in={true} timeout={drawerTransitionTime}>
             <Paper variant={'elevation'} elevation={5} style={{textAlign: 'center', padding: '1em', margin: '1em', backgroundColor: theme.palette.grey[200]}} >
                 <Typography variant='h4' paragraph style={{display: 'inline-flex'}}>
@@ -138,8 +142,12 @@ const UserEditor = React.memo(() => {
                         }
                     ]}
                 />
+                <Box>
+                   <Button variant="contained" onClick={() => setOpen(true)}>Change Password</Button> 
+                </Box>
             </Paper>
         </Fade>
+        </>
     )
 })
 export default UserEditor;

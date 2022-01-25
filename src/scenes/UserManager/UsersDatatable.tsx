@@ -76,7 +76,7 @@ function User(props: IUserProps) {
                 endAdornment: (
                   <Box>
                     <InputAdornment position="end">
-                      <Fade in={firstName.status === ActionStatus.Pending}>
+                      <Fade in={email.status === ActionStatus.Pending}>
                           <CircularProgress/>
                       </Fade>
                     </InputAdornment>

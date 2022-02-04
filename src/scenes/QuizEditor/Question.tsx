@@ -106,6 +106,8 @@ export const Question = React.memo(
             fullWidth
             value={type.value}
             onChange={(event) => {
+              setRequestReason(newFormItem(false, false));
+              setAlignment(newFormItem(QuizQuestionAlignment.HORIZONTAL, false));
               defaultAPIAction({
                 path: `/${ModelNamesEnum.Quiz_Question}/${props.data.question_id}`,
                 method: HttpMethod.PATCH,
@@ -133,6 +135,7 @@ export const Question = React.memo(
         <TableCell align="center" style={{width: '10%'}}>
           <Select
             fullWidth
+            disabled={type.value == QuizQuestionType.SLIDER}
             value={alignment.value}
             onChange={(event) => {
               defaultAPIAction({

@@ -29,10 +29,10 @@ export function ChangePasswordDialog({open, setOpen}: IChangePasswordDialogProps
 
     return (
         <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>Create New Project</DialogTitle>
+        <DialogTitle>Change Password</DialogTitle>
         <DialogContent style={{minWidth: '300px'}}>
             <Stack spacing={2}>
-                <DialogContentText>Project Details</DialogContentText>
+                <DialogContentText>Set New Password</DialogContentText>
                 <ControlledTextField 
                     label={'New Password'} 
                     fullWidth 

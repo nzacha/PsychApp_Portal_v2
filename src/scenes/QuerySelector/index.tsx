@@ -26,8 +26,8 @@ function downloadQuery(query: IQuizAnswerData[]){
     let data = [];
     for(var i=0; i<query.length; i++){      
       const answer = query[i];     
-      const date = answer?.createdAt ? new Date(answer.createdAt) : new Date();
-      const dateString = date.getDate() +"-"+ date.getMonth() +"-"+ date.getFullYear();
+      const date = answer?.date ? new Date(answer.date) : new Date();
+      const dateString = date.getDate() +"-"+ date.getMonth()+1 +"-"+ date.getFullYear();
       const timeString = date.getHours()+":"+date.getMinutes();
       data.push(['"'+answer.index+'"', '"'+dateString+'"', '"'+timeString+'"', '"'+answer.quiz_question.question+'"', '"'+answer.answer+'"']);      
     }   

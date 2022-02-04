@@ -15,6 +15,7 @@ export interface IProjectData extends BaseModel{
     allow_individual_times: boolean;
     allow_user_termination: boolean;
     automatic_termination: boolean;
+    download_link: string;
     created_by: string;
     modified_by: string;
 }

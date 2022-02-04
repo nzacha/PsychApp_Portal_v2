@@ -47,7 +47,7 @@ export const IOSSwitch = styled((props: SwitchProps) => (
     borderRadius: 26 / 2,
     backgroundColor: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D',
     opacity: 1,
-    transition: theme.transitions.create(['background-color'], {
+    transition: theme.transitions.create(['scale'], {
       duration: 500,
     }),
   },

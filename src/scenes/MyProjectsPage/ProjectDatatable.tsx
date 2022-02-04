@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import Paper from '@mui/material/Paper';
-import { Avatar, Card, CardActions, CardContent, CardHeader, IconButton, useTheme} from '@mui/material';
+import { Avatar, Card, CardActions, CardContent, CardHeader, Icon, IconButton, Typography, useTheme} from '@mui/material';
 
 import { grey } from '@mui/material/colors';
 
@@ -18,6 +18,7 @@ import Title from '../../components/common/Title';
 import { ProjectDetail } from './ProjectDetails';
 import { ModelNamesEnum } from '../../config/models';
 import { HttpMethod } from '../../config/httpMethods';
+import AndroidIcon from '@mui/icons-material/Android';
 
 interface IProjectProps{
     index: number;
@@ -57,6 +58,7 @@ function Project(props: IProjectProps){
                     </>
                 }
                 title={
+                    <>
                     <Box flexGrow={1} style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                         <Title 
                             title={data.name} 
@@ -83,6 +85,13 @@ function Project(props: IProjectProps){
                             <ExpandMoreIcon />
                         </ExpandMoreWrapper>
                     </Box>
+                    <Box flexGrow={1} style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                        <Typography>Download Android App</Typography>
+                        <IconButton disabled={!data.download_link} color={'success'} style={{marginLeft: '1em'}} onClick={() => {if (data.download_link) window.open(data.download_link);}}>
+                            <AndroidIcon/>
+                        </IconButton>
+                    </Box>
+                    </>
                 }
                 // subheader={data.description}
             />

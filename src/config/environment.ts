@@ -11,7 +11,7 @@ const Prodution: Environment = {
 };
 
 const Development: Environment = {
-    API_BASE_URL: 'http://153.92.221.7:5050',
+    API_BASE_URL: 'http://localhost:5050',
     APP_NAME: 'PsycleachApp Development',
     STATIC_FILES_URL: '/static',
 };

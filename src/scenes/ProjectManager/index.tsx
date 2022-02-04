@@ -15,6 +15,7 @@ import { HttpMethod } from "../../config/httpMethods";
 import { IFormItem, newFormItem } from "../../config/formItem";
 import { IUserData } from "../../models/Users";
 import { useGetUserList } from "../UserManager/store/selectors";
+import { ControlledTextField } from "../../components/common/FormControl/ControlledTextField";
 
 
 const ProjectManager = React.memo(() => {
@@ -53,6 +54,7 @@ const ProjectManager = React.memo(() => {
 
     const [newProjectName, setNewProjectName] = useState('New Project');
     const [selectedUser, setSelectedUser] = useState<IUserData | null>(null);
+    const [newDownloadLink, setNewDownloadLink] = useState('http://www...');
     // console.log('Rendering Project Manager Page');
     return (
         <>
@@ -81,6 +83,13 @@ const ProjectManager = React.memo(() => {
                             />
                         )}
                     />
+                    <TextField 
+                        label={'Download Link'} 
+                        fullWidth 
+                        type={'url'}
+                        value={newDownloadLink}
+                        onChange={e => setNewDownloadLink(e.currentTarget.value)}
+                    />
                 </Stack>
             </DialogContent>
             <DialogActions>
@@ -90,7 +99,7 @@ const ProjectManager = React.memo(() => {
                         defaultAPIAction({
                             path: `/${ModelNamesEnum.Project}`,
                             method: HttpMethod.PUT,
-                            body: {name: newProjectName, director_id: selectedUser.user_id},
+                            body: {name: newProjectName, director_id: selectedUser.user_id, download_link: newDownloadLink},
                             onFinish: (s, r) => {
                                 if(s) {
                                     setOpen(false);

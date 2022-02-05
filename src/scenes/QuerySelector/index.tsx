@@ -22,11 +22,12 @@ function downloadQuery(query: IQuizAnswerData[]){
     let delimiter = ",";
     let header = arrayHeader.join(delimiter) + '\n';
     
-  	query = query.sort((el1, el2) => el1.answer_id - el2.answer_id);
+  	query = query.sort((el1, el2) => (el1.index - el2.index) || (el1.question_id - el2.question_id));
     let data = [];
-    for(var i=0; i<query.length; i++){      
+    for(var i=0; i<query.length; i++){    
       const answer = query[i];     
       const date = answer?.date ? new Date(answer.date) : new Date();
+    //   .toLocaleString('en-GB', {timeZone: 'Asia/Nicosia'})
       const dateString = date.getDate() +"-"+ date.getMonth()+1 +"-"+ date.getFullYear();
       const timeString = date.getHours()+":"+date.getMinutes();
       data.push(['"'+answer.index+'"', '"'+dateString+'"', '"'+timeString+'"', '"'+answer.quiz_question.question+'"', '"'+answer.answer+'"']);      

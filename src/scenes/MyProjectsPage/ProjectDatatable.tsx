@@ -30,10 +30,10 @@ function Project(props: IProjectProps){
     const { index, data } = props;
     const dispatch = useDispatch();
     const theme = useTheme();
-
-    const [isOpen, setOpen] = React.useState(false)
+    
     const selectedProject = useGetSelectedProjectID();
 
+    const [isOpen, setOpen] = React.useState(false);
     return (
         <Card style={{flexGrow: 1}}>
             {/* backgroundColor: selectedProject == index ? theme.palette.primary.light : undefined */}
@@ -85,7 +85,7 @@ function Project(props: IProjectProps){
                             <ExpandMoreIcon />
                         </ExpandMoreWrapper>
                     </Box>
-                    <Box flexGrow={1} style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                    <Box flexGrow={1} display={'flex'} style={{justifyContent: 'center', alignItems: 'center'}}>
                         <Typography>Download Android App</Typography>
                         <IconButton disabled={!data.download_link} color={'success'} style={{marginLeft: '1em'}} onClick={() => {if (data.download_link) window.open(data.download_link);}}>
                             <AndroidIcon/>

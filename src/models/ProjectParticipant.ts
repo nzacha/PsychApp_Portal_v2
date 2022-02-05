@@ -6,4 +6,6 @@ export interface IProjectParticipantData extends BaseModel{
     name: string;
     project_id: number;
     progress: number;
+    is_active: boolean;
+    deactivation_reason: string;
 }   

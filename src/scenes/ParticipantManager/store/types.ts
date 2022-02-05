@@ -20,3 +20,8 @@ export const DELETE_PARTICIPANT: string = typeCreator(
     ReducerKeys.PARTICIPANT_MANAGER_REDUCER,
     'DeleteParticipant'
 );
+
+export const DEACTIVATE_PARTICIPANT: string = typeCreator(
+    ReducerKeys.PARTICIPANT_MANAGER_REDUCER,
+    'DeactivateParticipant'
+);

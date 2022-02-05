@@ -8,11 +8,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { IconButton, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, MenuItem, TextField, ToggleButton, Typography, useTheme } from '@mui/material';
+import DeactivateIcon from '@mui/icons-material/DoNotDisturbOn';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ActionStatus, defaultAPIAction } from '../../redux/common/actions';
-import { DELETE_PARTICIPANT, INSERT_PARTICIPANT } from './store/types';
+import { DEACTIVATE_PARTICIPANT, DELETE_PARTICIPANT, INSERT_PARTICIPANT } from './store/types';
 import { useDispatch } from 'react-redux';
 import { ModelNamesEnum } from '../../config/models';
 import { HttpMethod } from '../../config/httpMethods';
@@ -20,13 +21,59 @@ import { IProjectParticipantData } from '../../models/ProjectParticipant';
 import { useGetSelectedProjectID} from "../MyProjectsPage/store/selectors";
 import { IFormItem, newFormItem } from '../../config/formItem';
 
+type IDeleteConfirmationDialogData = {
+  participant: IProjectParticipantData | null;
+  onConfirm?: () => void;
+  open: boolean;
+};
+interface IDeleteConfirmationDialogProps{
+  data: IDeleteConfirmationDialogData;
+  setData: React.Dispatch<React.SetStateAction<IDeleteConfirmationDialogData>>;
+}
+function DeleteConfirmationDialog({data, setData}: IDeleteConfirmationDialogProps) {
+  return (
+    <div>
+      <Dialog
+        open={data.open}
+        onClose={() => setData({participant: null, open: false})}
+      >
+        <DialogTitle>
+          {`Delete participant`}
+        </DialogTitle>
+        <DialogContent>
+          {`Are you sure you want to delete participant:`}
+          <br/> 
+          <ul>
+            <li>{`code: ${data.participant?.authentication_code || ''}`}</li>
+            {data.participant?.name ? (
+              <li>
+                {`alias: ${data.participant.name}`}
+              </li>
+            ): ('')}
+          </ul>
+        </DialogContent>
+        <DialogActions>
+          <Button color={'warning'} variant={'contained'} onClick={() => {setData({participant: null, open: false})}}>Cancel</Button>
+          <Button color={'primary'} variant={'contained'} onClick={() => {setData({participant: null, open: false}); if(data.onConfirm) data.onConfirm();}} autoFocus>
+            Continue
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
+
+
 interface IParticipantProps{
   data: IProjectParticipantData;
   participants: IProjectParticipantData[];
   setParticipants: React.Dispatch<any>;
+  setDeleteConfirmation: React.Dispatch<React.SetStateAction<IDeleteConfirmationDialogData>>;
 }
 function Participant(props: IParticipantProps) {
   const dispatch = useDispatch();
+  const theme = useTheme();
+  
   const { data } = props;
 
   const [open, setOpen] = React.useState(false);
@@ -37,9 +84,10 @@ function Participant(props: IParticipantProps) {
       setName(newFormItem(data.name || '-', false));
   }, [data])
 
+  // console.log(data);
   return (
     <React.Fragment>
-      <TableRow style={{flex: 1}}>
+      <TableRow hover={data.is_active} style={{flex: 1, backgroundColor: data.is_active ? undefined : theme.palette.action.disabledBackground}}>
         <TableCell align="left" style={{width: '5%'}}>
           {data.participant_id}
         </TableCell>
@@ -73,6 +121,7 @@ function Participant(props: IParticipantProps) {
               }
             }}
           />
+          {data.deactivation_reason && <Typography variant={'subtitle2'}>{data.deactivation_reason}</Typography>}
         </TableCell>
         <TableCell align="center" style={{width: '20%'}}>
           <TextField 
@@ -97,23 +146,50 @@ function Participant(props: IParticipantProps) {
           />    
         </TableCell>
         <TableCell align="center" style={{width: '10%'}}>
-          <IconButton disabled onClick={(event) => {
-              defaultAPIAction({
-                  path: `/${ModelNamesEnum.Project_Participant}/${props.data.participant_id}`,
-                  method: HttpMethod.DELETE,
-                  onFinish: (success: boolean, payload) => {
+          <Box>
+            <IconButton onClick={(event) => {
+                defaultAPIAction({
+                    path: `/${ModelNamesEnum.Project_Participant}/status/${props.data.participant_id}`,
+                    method: HttpMethod.POST,
+                    body: {
+                      value: !data.is_active,
+                      reasoning: ''
+                    },
+                    onFinish: (success: boolean, payload) => {
                       if(success){
-                          // console.log(data)
-                          let newParticipants = props.participants.slice();
-                          newParticipants = newParticipants.filter(item => item.participant_id !== props.data.participant_id)
-                          props.setParticipants(newParticipants);
-                          // props.onRefresh();
+                        const newParticipant = payload.data.response;
+                        const newParticipants = props.participants.slice().map(item => {
+                          if(item.participant_id == newParticipant.participant_id){
+                            return newParticipant;
+                          }else{
+                            return item;
+                          }
+                        })
+                        props.setParticipants(newParticipants);
                       }
-                  }
-              })(dispatch, DELETE_PARTICIPANT)
-          }}>
-              <DeleteIcon/>
-          </IconButton>
+                    }
+                })(dispatch, DEACTIVATE_PARTICIPANT)
+            }}>
+                <DeactivateIcon/>
+            </IconButton>
+            <IconButton onClick={(event) => {
+                props.setDeleteConfirmation({participant: props.data, open: true, onConfirm: () => {
+                  defaultAPIAction({
+                    path: `/${ModelNamesEnum.Project_Participant}/${props.data.participant_id}`,
+                    method: HttpMethod.DELETE,
+                    onFinish: (success: boolean, payload) => {
+                        if(success){
+                            let newParticipants = props.participants.slice();
+                            newParticipants = newParticipants.filter(item => item.participant_id !== props.data.participant_id)
+                            props.setParticipants(newParticipants);
+                        }
+                    }
+                })(dispatch, DELETE_PARTICIPANT)
+                }})
+            }}>
+                <DeleteIcon/>
+            </IconButton>
+          </Box>
       </TableCell>
       </TableRow>
       <TableRow>
@@ -137,9 +213,10 @@ export function ParticipantsDatatable(props: IParticipantsDatatableProps) {
   const dispatch = useDispatch<any>();
   
   const selectedProject = useGetSelectedProjectID();
-
+  const [data, setData] = React.useState<IDeleteConfirmationDialogData>({participant: null, open: false});
   return (
     <TableContainer component={Paper}>
+      <DeleteConfirmationDialog data={data} setData={setData}/>
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
@@ -176,7 +253,8 @@ export function ParticipantsDatatable(props: IParticipantsDatatableProps) {
               key={participant.participant_id} 
               data={participant} 
               participants={props.participants} 
-              setParticipants={props.setParticipants} />
+              setParticipants={props.setParticipants}
+              setDeleteConfirmation={setData} />
           ))}
         </TableBody>
       </Table>

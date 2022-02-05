@@ -36,7 +36,7 @@ const QuizEditor = React.memo(() => {
         refreshQuizList(dispatch, selectedProject); 
     },[dispatch, selectedProject])
     
-    console.log(quizList);
+    // console.log(quizList);
     return (
       <Fade in={true} timeout={drawerTransitionTime}>
         <Box style={{flexGrow: 1, overflowX:'hidden', padding: '1em'}}>

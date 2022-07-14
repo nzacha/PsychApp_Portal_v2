@@ -14,7 +14,6 @@ export function defaultReducer<TState>(
         label: string;
         actionType: string;
         reducerFunctionType: IReducerFunction;
-        override?: boolean;
         reducerFunction?: (state: any, action:IAction) => any;
         onFinish?: (result: any) => void;
     }>,

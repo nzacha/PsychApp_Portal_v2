@@ -1,5 +1,5 @@
 import { useSelector, shallowEqual} from "react-redux";
-import { ReducerKeys } from "../../../redux/config";
+import { ReducerKeys } from "../../config";
 import { IState } from "./reducer";
 
 export const useSelectAuthData = (): IState['logged_in_user'] => {
@@ -9,4 +9,9 @@ export const useSelectAuthData = (): IState['logged_in_user'] => {
   );
 };
   
-  
+export const useSelectNotificationData = (): IState['notifications'] => {
+  return useSelector(
+    (state: any) => ((state[ReducerKeys.AUTH_REDUCER] as IState).notifications),
+    shallowEqual
+  );
+};

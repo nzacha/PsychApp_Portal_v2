@@ -1,4 +1,5 @@
 import { ISnackBarOptions } from "../../../components/Snackbar";
+import { DrawerType } from "../../../navigation";
 import { IStackedSnackBarOptions } from "../../../providers/AppProvider";
 import { ActionStatus, IAction } from "../../common/actions";
 import { defaultReducer, IReducerFunction } from "../../common/reducer";

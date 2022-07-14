@@ -1,4 +1,4 @@
-import { ActionStatus } from "../redux/common/actions";
+import { ActionStatus } from "../store/common/actions";
 
 export interface IFormItem<T>{
     value: T;

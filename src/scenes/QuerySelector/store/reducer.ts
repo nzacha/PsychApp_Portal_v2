@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { IQuizAnswerData } from '../../../models/QuizAnswer';
-import { ActionStatus, IAction } from '../../../redux/common/actions';
-import { defaultReducer, IReducerFunction } from '../../../redux/common/reducer';
+import { ActionStatus, IAction } from '../../../store/common/actions';
+import { defaultReducer, IReducerFunction } from '../../../store/common/reducer';
 import * as Types from './types';
 
 export interface IState {

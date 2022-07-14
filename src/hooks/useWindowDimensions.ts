@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 function getWindowDimensions() {
-  const { innerWidth: width, innerHeight: height } = window;
+  const { innerWidth: windowWidth, innerHeight: windowHeight } = window;
   return {
-    width,
-    height
+    windowWidth,
+    windowHeight
   };
 }
 
@@ -22,5 +22,5 @@ export default function useWindowDimensions() {
     return () => window.removeEventListener('resize', handleResize);
   }, [dispatch]);
 
-  return windowDimensions;
+  return {...windowDimensions, isSmallScreen: windowDimensions.windowWidth <= 600, isMediumScreen: windowDimensions.windowWidth <= 1000, isLargeScreen: windowDimensions.windowWidth > 1000};
 }

@@ -1,5 +1,5 @@
-import { ActionStatus, IAction } from '../../../redux/common/actions';
-import { defaultReducer, IReducerFunction } from '../../../redux/common/reducer';
+import { ActionStatus, IAction } from '../../../store/common/actions';
+import { defaultReducer, IReducerFunction } from '../../../store/common/reducer';
 import { IQuizData } from '../../../models/Quiz';
 import * as Types from './types';
 

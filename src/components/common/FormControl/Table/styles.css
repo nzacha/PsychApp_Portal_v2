@@ -1,0 +1,16 @@
+#Mobile_List .MuiTablePagination-toolbar {
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#Mobile_List .MuiTablePagination-select {
+    margin: 0;
+}
+
+#Mobile_List .MuiTablePagination-displayedRows {
+    margin: 0;
+}
+
+#Mobile_List .MuiTablePagination-actions {
+    margin: 0;
+}

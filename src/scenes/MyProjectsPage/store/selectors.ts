@@ -1,6 +1,6 @@
 import { useSelector, shallowEqual} from "react-redux";
 import { IProjectData } from "../../../models/Project";
-import { ReducerKeys } from "../../../redux/config";
+import { ReducerKeys } from "../../../store/config";
 import { IState } from "./reducer";
 
 export const useGetProjectList = (): IState['projectList'] => {

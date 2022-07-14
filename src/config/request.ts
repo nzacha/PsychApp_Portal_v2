@@ -2,10 +2,10 @@ import axios, { AxiosResponse, Method } from "axios";
 import { Dispatch } from "react";
 import { getState } from "..";
 import { showSnackBar } from "../components/Snackbar";
-import { defaultAction } from "../redux/common/actions";
-import { ReducerKeys } from "../redux/config";
-import { setToken } from "../redux/staticReducers/authReducer/reducer";
-import { LOG_IN } from "../redux/staticReducers/authReducer/types";
+import { defaultAction } from "../store/common/actions";
+import { ReducerKeys } from "../store/config";
+import { setToken } from "../store/staticReducers/authReducer/reducer";
+import { LOG_IN } from "../store/staticReducers/authReducer/types";
 import Environment from "./environment";
 import { ERROR, IResponse } from "./response";
 

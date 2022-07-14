@@ -1,17 +1,24 @@
-import { Fade, Paper, Typography, useTheme } from "@mui/material";
-import GridContainer from "../../components/common/GridContainer";
-import { drawerTransitionTime } from "../../navigation";
-import SearchBar from "../../components/common/SearchBar";
-import ParticipantDatatable from "./ParticipantDatatable";
-import React from "react";
-import { defaultAPIAction } from "../../redux/common/actions";
-import { useDispatch } from "react-redux";
-import { ModelNamesEnum } from "../../config/models";
-import { HttpMethod } from "../../config/httpMethods";
-import { SET_PARTICIPANT_LIST } from "./store/types";
-import { useGetParticipantsList } from "./store/selectors";
-import { IProjectParticipantData } from "../../models/ProjectParticipant";
-import { useGetSelectedProjectID} from "../MyProjectsPage/store/selectors";
+import React from 'react';
+import { Fade, Paper, Typography, useTheme } from '@mui/material';
+import { drawerTransitionTime } from '../../navigation';
+import { useDispatch } from 'react-redux';
+import { ModelNamesEnum } from '../../config/models';
+import { HttpMethod } from '../../config/httpMethods';
+import { useGetSelectedProjectID } from '../MyProjectsPage/store/selectors';
+import {
+    DeleteParticipantDialog,
+    IDeleteConfirmationDialogData,
+} from './DeleteParticiapantDialog';
+import { IParticipantTableData, ParticipantTable } from './ParticipantTable';
+import { useForm } from 'react-hook-form';
+import request from 'config/request';
+
+async function fetchParticipants(selectedProject: number) {
+    return request({
+        path: `/${ModelNamesEnum.Project_Participant}/list/${selectedProject}`,
+        method: HttpMethod.GET,
+    });
+}
 
 const UserEditor = React.memo(() => {
     const dispatch = useDispatch();
@@ -19,39 +26,60 @@ const UserEditor = React.memo(() => {
 
     const selectedProject = useGetSelectedProjectID();
 
-    const participantList = useGetParticipantsList();
+    const { control, reset } = useForm<IParticipantTableData>({
+        defaultValues: { participants: [] },
+    });
+
+    //fetch participants action
     React.useEffect(() => {
-        if(selectedProject){
-            defaultAPIAction({
-                path: `/${ModelNamesEnum.Project_Participant}/list/${selectedProject}`,
-                method: HttpMethod.GET,
-            })(dispatch, SET_PARTICIPANT_LIST)    
+        if (selectedProject) {
+            fetchParticipants(selectedProject).then((res) => {
+                reset({ participants: res.data?.response || [] });
+            });
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[dispatch, selectedProject])
+    }, [dispatch, selectedProject]);
 
-    const [participants, setParticipants] = React.useState<IProjectParticipantData[]>([]);
-    React.useEffect(()=>{
-        setParticipants(participantList.data || []);
-        // console.log(participantList.data);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[participantList])
+    const [deleteDialogData, setDeleteDialogData] =
+        React.useState<IDeleteConfirmationDialogData>({
+            participant: null,
+            open: false,
+        });
 
-    
     return (
-        <Fade in={true} timeout={drawerTransitionTime}>
-            <Paper variant={'elevation'} elevation={5} style={{textAlign: 'center', padding: '1em', margin: '1em', backgroundColor: theme.palette.grey[200]}} >
-                <Typography variant='h4' paragraph style={{display: 'inline-flex'}}>
-                    {/* <AccountIcon fontSize={'large'} style={{marginRight: '0.5em'}}/>  */}
-                    Project Participation
-                </Typography>
-                <Typography variant='h6' paragraph>Here, you can view and edit project participations</Typography>    
-                <GridContainer lg={4} md={6} xs={12} justify={'flex-end'}>
-                    <SearchBar/>
-                </GridContainer>
-                <ParticipantDatatable participants={participants} setParticipants={setParticipants}/>
-            </Paper>
-        </Fade>
-    )
-})
+        <>
+            <DeleteParticipantDialog
+                data={deleteDialogData}
+                setData={setDeleteDialogData}
+            />
+            <Fade in={true} timeout={drawerTransitionTime}>
+                <Paper
+                    variant={'elevation'}
+                    elevation={5}
+                    style={{
+                        textAlign: 'center',
+                        padding: '1em',
+                        margin: '1em',
+                        backgroundColor: theme.palette.grey[200],
+                    }}
+                >
+                    <Typography
+                        variant="h4"
+                        paragraph
+                        style={{ display: 'inline-flex' }}
+                    >
+                        {/* <AccountIcon fontSize={'large'} style={{marginRight: '0.5em'}}/>  */}
+                        Project Participation
+                    </Typography>
+                    <Typography variant="h6" paragraph>
+                        Here, you can view and edit project participations
+                    </Typography>
+                    <ParticipantTable
+                        control={control}
+                        setDeleteDialogData={setDeleteDialogData}
+                    />
+                </Paper>
+            </Fade>
+        </>
+    );
+});
 export default UserEditor;

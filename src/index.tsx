@@ -4,28 +4,24 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
-import rootReducer from './redux/index';
+import rootReducer from './store/index';
 import { createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { ReducerKeys } from './redux/config';
+import { ReducerKeys } from './store/config';
 
-const store = createStore(
-  rootReducer, 
-  {},
-  composeWithDevTools(),
-)
+const store = createStore(rootReducer, {}, composeWithDevTools());
 
 export const getState = (reducerKey: ReducerKeys): any => {
-  if (reducerKey in store.getState())
-    return (store.getState() as any)[reducerKey];
-  return store.getState();
+    if (reducerKey in store.getState())
+        return (store.getState() as any)[reducerKey];
+    return store.getState();
 };
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root')
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

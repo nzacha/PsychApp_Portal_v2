@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import { IProjectData } from '../../../models/Project';
 import { IProjectUserLinkData } from '../../../models/ProjectUserLink';
-import { ActionStatus, IAction } from '../../../redux/common/actions';
-import { defaultReducer, IReducerFunction } from '../../../redux/common/reducer';
+import { ActionStatus, IAction } from '../../../store/common/actions';
+import { defaultReducer, IReducerFunction } from '../../../store/common/reducer';
 import * as Types from './types';
 
 export interface IState {

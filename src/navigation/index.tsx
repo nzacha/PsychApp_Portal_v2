@@ -10,10 +10,7 @@ import { Avatar, Backdrop, ClickAwayListener, Fade } from '@mui/material';
 
 import ucyIcon from '../media/static/images/ucy.svg';
 import useWindowDimensions from '../hooks/useWindowDimensions';
-import {
-    useSelectNavBarConfig,
-    useSelectSideBarConfig,
-} from '../store/staticReducers/commonReducer/selectors';
+import { useSelectNavBarConfig, useSelectSideBarConfig } from '../store/staticReducers/commonReducer/selectors';
 import _ from 'lodash';
 
 const drawerWidth = 240;
@@ -44,8 +41,7 @@ interface IAppBarProps extends MuiAppBarProps {
     hideOnClose: boolean;
 }
 const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) =>
-        prop !== 'open' && prop !== 'movingAppBar' && prop !== 'hideOnClose',
+    shouldForwardProp: (prop) => prop !== 'open' && prop !== 'movingAppBar' && prop !== 'hideOnClose',
 })<IAppBarProps>(({ theme, open, movingAppBar, hideOnClose }) => ({
     zIndex: -1,
     transition: theme.transitions.create(['width', 'margin'], {
@@ -81,13 +77,10 @@ const Drawer = styled(MuiDrawer, {
     boxSizing: 'border-box',
     alignItems: 'center',
     alignContent: 'center',
-    transition: theme.transitions.create(
-        ['transform', 'margin', 'height', 'width', 'top', 'left'],
-        {
-            easing: theme.transitions.easing.easeInOut,
-            duration: drawerTransitionTime,
-        }
-    ),
+    transition: theme.transitions.create(['transform', 'margin', 'height', 'width', 'top', 'left'], {
+        easing: theme.transitions.easing.easeInOut,
+        duration: drawerTransitionTime,
+    }),
     ...(open
         ? {
               width: drawerWidth,
@@ -107,11 +100,7 @@ interface IDrawerProps {
     renderNavBar: boolean;
     children: React.ReactElement;
 }
-export default function MiniDrawer({
-    renderSideBar,
-    renderNavBar,
-    children,
-}: IDrawerProps) {
+export default function MiniDrawer({ renderSideBar, renderNavBar, children }: IDrawerProps) {
     const theme = useTheme();
 
     const sideBarConfig = useSelectSideBarConfig();
@@ -128,7 +117,7 @@ export default function MiniDrawer({
     const handleOpenChange = _.debounce((val) => _setOpen(val), 20);
 
     return (
-        <Box style={{ height: '100vh' }}>
+        <Box style={{ height: '100%' }}>
             {renderNavBar && (
                 <AppBar
                     position="static"
@@ -136,10 +125,7 @@ export default function MiniDrawer({
                     movingAppBar={movingAppBar && !isSmallScreen}
                     hideOnClose={hideOnClose}
                 >
-                    <ToolBar
-                        isOpen={renderNavBar && open}
-                        handleDrawerChange={(val) => handleOpenChange(val)}
-                    />
+                    <ToolBar isOpen={renderNavBar && open} handleDrawerChange={(val) => handleOpenChange(val)} />
                 </AppBar>
             )}
             {renderSideBar && (
@@ -151,14 +137,7 @@ export default function MiniDrawer({
                     PaperProps={{
                         style: {
                             transition: theme.transitions.create(
-                                [
-                                    'transform',
-                                    'margin',
-                                    'height',
-                                    'width',
-                                    'top',
-                                    'left',
-                                ],
+                                ['transform', 'margin', 'height', 'width', 'top', 'left'],
                                 {
                                     easing: theme.transitions.easing.easeInOut,
                                     duration: drawerTransitionTime,
@@ -177,26 +156,19 @@ export default function MiniDrawer({
                         <Box
                             style={{
                                 flexGrow: 1,
-                                backgroundColor:
-                                    theme.palette.action.disabledBackground,
+                                backgroundColor: theme.palette.action.disabledBackground,
                             }}
                         >
                             {(hideOnClose || !movingAppBar) && <DrawerHeader />}
                             <Box
                                 style={{
-                                    transition: theme.transitions.create(
-                                        ['height'],
-                                        {
-                                            easing: theme.transitions.easing
-                                                .easeInOut,
-                                            duration: drawerTransitionTime,
-                                        }
-                                    ),
+                                    transition: theme.transitions.create(['height'], {
+                                        easing: theme.transitions.easing.easeInOut,
+                                        duration: drawerTransitionTime,
+                                    }),
                                     ...(!hideOnClose && !open
                                         ? {
-                                              height: `calc(${theme.spacing(
-                                                  8
-                                              )} + 1em)`,
+                                              height: `calc(${theme.spacing(8)} + 1em)`,
                                           }
                                         : {
                                               height: 'calc(180px + 3em)',
@@ -205,28 +177,17 @@ export default function MiniDrawer({
                             >
                                 <Avatar
                                     sx={{
-                                        backgroundColor:
-                                            theme.palette.background.default,
+                                        backgroundColor: theme.palette.background.default,
                                         boxShadow: theme.shadows[5],
-                                        transition: theme.transitions.create(
-                                            ['width', 'height', 'margin'],
-                                            {
-                                                easing: theme.transitions.easing
-                                                    .easeInOut,
-                                                duration: drawerTransitionTime,
-                                            }
-                                        ),
+                                        transition: theme.transitions.create(['width', 'height', 'margin'], {
+                                            easing: theme.transitions.easing.easeInOut,
+                                            duration: drawerTransitionTime,
+                                        }),
                                         ...(!hideOnClose && !open
                                             ? {
-                                                  marginLeft: `${theme.spacing(
-                                                      0.5
-                                                  )}`,
-                                                  marginRight: `${theme.spacing(
-                                                      0.5
-                                                  )}`,
-                                                  marginTop: movingAppBar
-                                                      ? '4em'
-                                                      : '1em',
+                                                  marginLeft: `${theme.spacing(0.5)}`,
+                                                  marginRight: `${theme.spacing(0.5)}`,
+                                                  marginTop: movingAppBar ? '4em' : '1em',
                                                   marginBottom: '0em',
                                                   width: `${theme.spacing(6)}`,
                                                   height: `${theme.spacing(6)}`,
@@ -250,13 +211,9 @@ export default function MiniDrawer({
             )}
             <Box
                 style={{
-                    height: `calc(100vh - ${theme.spacing(8)}})`,
+                    height: `calc(100% - ${theme.spacing(8)}})`,
                     width: `calc(100vw -${
-                        renderSideBar && open
-                            ? `${drawerWidth}px`
-                            : hideOnClose
-                            ? '0px'
-                            : `${theme.spacing(8)}`
+                        renderSideBar && open ? `${drawerWidth}px` : hideOnClose ? '0px' : `${theme.spacing(8)}`
                     })`,
                     marginLeft:
                         renderSideBar && open && shouldGrow
@@ -275,14 +232,7 @@ export default function MiniDrawer({
                     onClick={() => handleOpenChange(false)}
                     transitionDuration={drawerTransitionTime}
                 />
-                <Box
-                    height={`calc(100vh - ${
-                        renderNavBar ? theme.spacing(8) : '0px'
-                    })`}
-                    alignItems={'center'}
-                >
-                    {children}
-                </Box>
+                <Box alignItems={'center'}>{children}</Box>
             </Box>
         </Box>
     );

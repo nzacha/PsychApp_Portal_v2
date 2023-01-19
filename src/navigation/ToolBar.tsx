@@ -141,6 +141,7 @@ export default function TopBar(props: IProps) {
             onClose={handleMobileMenuClose}
         >
             <MenuItem
+                disabled
                 ref={notificationsAnchorEl}
                 onClick={() => {
                     setNotificationsOpen(true);
@@ -296,24 +297,27 @@ export default function TopBar(props: IProps) {
                     )}
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                         <Tooltip title={'Notifications'}>
-                            <IconButton
-                                size="large"
-                                color="inherit"
-                                onClick={() => setNotificationsOpen(true)}
-                                ref={notificationsAnchorEl}
-                            >
-                                <Badge
-                                    badgeContent={(notifications.data || []).filter((el) => !el.is_read).length}
-                                    color="error"
-                                >
-                                    <NotificationsIcon />
-                                </Badge>
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title={'currently unavailable'}>
                             <span>
-                                <IconButton size="large" aria-label="show 4 new mails" color="inherit" disabled>
-                                    <Badge badgeContent={4} color="error">
+                                <IconButton
+                                    disabled
+                                    size="large"
+                                    color="inherit"
+                                    onClick={() => setNotificationsOpen(true)}
+                                    ref={notificationsAnchorEl}
+                                >
+                                    <Badge
+                                        badgeContent={(notifications.data || []).filter((el) => !el.is_read).length}
+                                        color="error"
+                                    >
+                                        <NotificationsIcon />
+                                    </Badge>
+                                </IconButton>
+                            </span>
+                        </Tooltip>
+                        <Tooltip title={'Messages'}>
+                            <span>
+                                <IconButton size="large" color="inherit" disabled>
+                                    <Badge badgeContent={''} invisible={true} color="error">
                                         <MailIcon />
                                     </Badge>
                                 </IconButton>

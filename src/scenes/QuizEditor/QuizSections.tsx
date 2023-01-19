@@ -26,6 +26,7 @@ import _ from 'lodash';
 import { UncontrolledTextField } from 'components/common/FormControl/Textfield/UncontrolledTextField';
 import { ConfirmationDialog } from 'components/common/Dialogs/ConfirmationDialog';
 import { useState } from 'react';
+import { IQuizOptionData } from 'models/QuizOption';
 
 interface IQuestionTableFormData {
     questions: IQuizQuestionData[];
@@ -127,7 +128,10 @@ export function QuizSection({ section_id, questions }: IQuestionsTableProps) {
                             </Box>
                         )}
                         <UncontrolledResponsiveTable
-                            data={data[rowIndex].question_options}
+                            data={(data[rowIndex].question_options || []).sort(
+                                (el1: Partial<IQuizOptionData>, el2: Partial<IQuizOptionData>) =>
+                                    (el1?.question_option_id || 0) - (el2?.question_option_id || 0)
+                            )}
                             columns={getOptionsTableColumns(
                                 isSmallScreen,
                                 watch('questions')[rowIndex].question_id,

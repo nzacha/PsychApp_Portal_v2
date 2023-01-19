@@ -201,7 +201,7 @@ export function ParticipantTable({ control, setDeleteDialogData, ...props }: IPa
     });
 
     return (
-        <Fade in={fieldArrayProps.fields.length > 0} timeout={drawerTransitionTime}>
+        <Fade in={true} timeout={drawerTransitionTime}>
             <Box>
                 {isSmallScreen && (
                     <Stack

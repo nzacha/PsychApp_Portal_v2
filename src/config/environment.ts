@@ -6,10 +6,10 @@ interface Environment {
 }
 
 const Prodution: Environment = {
-    API_BASE_URL: 'http://153.92.221.7:5050',
-    CHAT_BASE_URL: 'http://153.92.221.7:5051',
+    API_BASE_URL: 'http://45.134.226.253:5050',
+    CHAT_BASE_URL: 'http://45.134.226.253:5051',
     APP_NAME: 'PsychApp',
-    STATIC_FILES_URL: 'http://153.92.221.7/static',
+    STATIC_FILES_URL: 'http://45.134.226.253:/static',
 };
 
 const Development: Environment = {

@@ -17,7 +17,7 @@ export enum ModelEnum{
 export const ModelNamesEnum = {
     // [ModelEnum.Role]: 'role',
     [ModelEnum.Project]: 'project',
-    [ModelEnum.Project_Participant]: 'project_participant',
+    [ModelEnum.Project_Participant]: 'participant',
     [ModelEnum.User]: 'user',
     [ModelEnum.Quiz]: 'quiz',
     [ModelEnum.Quiz_Section]: 'section',
